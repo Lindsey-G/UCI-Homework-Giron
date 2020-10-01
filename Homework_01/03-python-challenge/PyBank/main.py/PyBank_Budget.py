@@ -2,7 +2,7 @@
 import os
 import csv
 
-# Define function Py_bank and have it accept months and profit_losses as it's sole parameter
+# Define function Py_bank and have it accept months and profit_losses as it's parameter
 def py_bank(months, profit_losses):
 
     # Get total months from column 0 using len    
@@ -78,7 +78,6 @@ with open(budget_csv, 'r') as csv_file:
 
 #     writer.writerows("Financial Analysis")
 
-#     writer.writerows(0)
+#     writer.writerows
 
 py_bank(months, profit_losses)
-    
