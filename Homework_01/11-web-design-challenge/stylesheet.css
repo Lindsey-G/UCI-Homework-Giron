@@ -1,4 +1,43 @@
-p {
-    background-color: skyblue;
-    margin: 50px 50px, ;
+.navbar {
+    font-size: x-large;
+}
+
+.navbar-brand {
+    font-size: x-large;
+    padding: 10px;
+    background-color: rgb(216, 62, 216);
+}
+
+
+
+#landing {
+    margin-top: 100px;
+    margin-left: 200px;
+    margin-right: 100px;
+    /* background-color: royalblue; */
+}
+
+#main_figure {
+  size: 20px, 30px;
+}
+#main_summary {
+    padding-top: 20px;
+    float: right;
+}
+h1 {
+    font: bolder;
+}
+
+h2 {
+    font-size: x-large;
+}
+#temp {
+    position: relative;
+   
+    /* height: -80pc; */
+}
+#humidity {
+    position: relative;
+    width: 1pc;
+    height: -20pc;
 }
