@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="stylesheet.css">
     </head>
 
-<body>
+<body class="background">
     
     <!-- navbar section -->
     <!-- 'Header' titled Latitude -->
@@ -56,13 +56,25 @@
             </ul>
         </div>
       </nav> 
-
-      <div class="container">
+      <!-- image section -->
+      <div id="temp_body" class="container">
+        <h1>Latitude VS. Max Temperature</h1>
+        <br>
+        <br>    
             <div class="row">
-
-                <figure>
-                    <img src="visualizations/lat_humidity.png" class="rounded" alt="Humidity Map">
-                </figure>
+            
+                <div class="col-sm-6 col-lg-6">
+                    <figure id="single_temp">
+                        <a target="_blank" href="visualizations/lat_temp.png">
+                            <img src="visualizations/lat_temp.png" class="rounded" alt="Temperature Map">
+                        </a>
+                    </figure>
+                </div>
+                <div class="col-sm-6 col-lg-6">
+                    <div id= "temp_text">
+                    <p> This scatter plot displays a cities Latitude VS. Max Temperature. We can instantly see a trend by how the plots are in a line that curves. We can also observe that temperatures begin to rise as the cities approach the equator (0 latitude). However, the highest temperatures were reached within 20 degrees of the equator. Also,  the max temperatures were located in the Southern Hemisphere. Based on this plot, we can state that on October 19, 2020, the closer a city was to the equator, the warmer it was. </p>
+                    </div>    
+                </div>
             </div>
         </div>
         

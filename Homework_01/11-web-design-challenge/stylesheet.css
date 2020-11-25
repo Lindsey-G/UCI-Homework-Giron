@@ -5,7 +5,7 @@
 .navbar-brand {
     font-size: x-large;
     padding: 10px;
-    background-color: rgb(216, 62, 216);
+    background-color: rgb(250, 197, 63);
 }
 
 
@@ -14,7 +14,7 @@
     margin-top: 100px;
     margin-left: 200px;
     margin-right: 100px;
-    /* background-color: royalblue; */
+    background-color: rgb(250, 197, 63);
 }
 
 #main_figure {
@@ -40,4 +40,28 @@ h2 {
     position: relative;
     width: 1pc;
     height: -20pc;
+}
+
+
+#temp_body {
+    padding: 100px;
+    background-color: rgb(250, 197, 63);
+}
+
+#single_temp {
+    /* margin-top: 200px;
+    margin-left: 50px; */
+    padding: 10px;
+    float: left;
+    background-color: rgb(210, 210, 228);
+}
+
+#background {
+    background-color: gold;
+}
+#temp_text {
+    /* margin-top: 300px; */
+    padding: 30px;
+    float: right;
+    background-color:rgb(210, 210, 228);
 }
