@@ -3,18 +3,17 @@
 }
 
 .navbar-brand {
-    font-size: x-large;
     padding: 10px;
-    background-color: rgb(250, 197, 63);
+    font-size: x-large;
+    color: royalblue;
+
+    background-color: gold;
+
 }
 
 
-
-#landing {
-    margin-top: 100px;
-    margin-left: 200px;
-    margin-right: 100px;
-    background-color: rgb(250, 197, 63);
+#main_back {
+    background-color: gold;
 }
 
 #main_figure {
@@ -26,11 +25,15 @@
 }
 h1 {
     font: bolder;
+    color: royalblue;
 }
 
 h2 {
     font-size: x-large;
+    color: royalblue;
+    /* position: ; */
 }
+
 #temp {
     position: relative;
    
@@ -43,25 +46,22 @@ h2 {
 }
 
 
-#temp_body {
+.body {
     padding: 100px;
-    background-color: rgb(250, 197, 63);
+    background-color: gold;
+
 }
 
-#single_temp {
-    /* margin-top: 200px;
-    margin-left: 50px; */
+.single_image {
     padding: 10px;
     float: left;
-    background-color: rgb(210, 210, 228);
+    background-color: whitesmoke;
 }
 
-#background {
-    background-color: gold;
-}
-#temp_text {
-    /* margin-top: 300px; */
-    padding: 30px;
+
+.single_text {
+
+    padding: 45px;
     float: right;
-    background-color:rgb(210, 210, 228);
+    background-color:whitesmoke;
 }
