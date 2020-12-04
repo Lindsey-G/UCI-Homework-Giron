@@ -50,13 +50,6 @@ def scrape():
             # variable for news_p from result              
             news_p = result.find('div', class_="rollover_description_inner").text
             
-            # print results
-            if (news_title and news_p):
-                print('--------------------------------------------')
-                print(news_title)
-                print('--------------------------------------------')
-                print(news_p)
-                print('--------------------------------------------')
         except AttributeError as e:
             print(e)
     # State that scrape is complete           
@@ -64,26 +57,17 @@ def scrape():
             
     # ## Create connection to JPL browser and soup
 
-    # Set up splinter for JPL
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
-
     # Create variable for 'https://www.jpl.nasa.gov/spaceimages/' to scrape
     jpl_url = 'https://www.jpl.nasa.gov/spaceimages/'
-
     # Create connection to browser to scrape current data. Using browser.visit() with url as argument.
     browser.visit(jpl_url)
-
     # Use .links.find_by_partial_text.() with 'FULL IMAGE' argument and .click() to click on that buttom and take us to the right page
     browser.links.find_by_partial_text('FULL IMAGE').click()
 
     # Create variable to pull html from browser. Using browser.html() with url as argument
     html = browser.html
-
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')  
-
-    print(soup.prettify())
 
     # Quit browser
     browser.quit()
@@ -93,48 +77,36 @@ def scrape():
     # Create results vaiable to narrow search for latest featured image
     image_results = soup.find_all('a', class_="button")
 
-
     # for loop image_results to scrape image_url and featured_image_url
     for image in image_results:
         # Create variable to extract image_url and featured_image_url
         image_url = image['data-fancybox-href']
         featured_image_url = f'https://www.jpl.nasa.gov{image_url}'
         
-    # Display featured_image_url and test link works
-    featured_image_url
-
     # ## Mars Facts
 
     # Create variable for mars url 
     mars_url = "https://space-facts.com/mars/"
 
     # Using pd.read_html() with mars_url as argument to read in table
-    tables = pd.read_html(mars_url)
-    tables
+    mars_tables = pd.read_html(mars_url)
     
     # ## Mars Hemispheres
     
     # ## Create connection and soup for Cerberus Hemisphere
 
-    # Set up splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
-
-    # creat base url for each image
+    # Create base url for each image
     usgs_base_url = 'https://astrogeology.usgs.gov'
 
     # Create variable for 'https://mars.nasa.gov/news/' to scrape
     mars_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
-
     # Create connection to browser to scrape current data. Using browser.visit() with url as argument.
     browser.visit(mars_url)
-
     # Use .links.find_by_partial_text.() with 'Cerberus Hemisphere Enhanced' argument and .click() to click on that buttom and take us to the right page
     browser.links.find_by_partial_text('Cerberus Hemisphere Enhanced').click()
 
     # Create variable to pull html from browser. Using browser.html() with url as argument
     html = browser.html
-
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
@@ -143,7 +115,6 @@ def scrape():
 
     # Create results vaiable to narrow search for Cerberus Hemisphere Enhanced title and link
     cerberus_results = soup.find_all('div', class_="container")
-
     # for loop cerberus_results to scrape Cerberus Hemisphere Enhanced title and link
     for cerberus in cerberus_results:
         
@@ -158,22 +129,15 @@ def scrape():
 
     # ## Create connection and soup for Schiaparelli Hemisphere
 
-    # Set up splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
-
     # Create variable for 'https://mars.nasa.gov/news/' to scrape
     mars_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
-
     # Create connection to browser to scrape current data. Using browser.visit() with url as argument.
     browser.visit(mars_url)
-
     # Use .links.find_by_partial_text.() with 'Schiaparelli Hemisphere Enhanced' argument and .click() to click on that buttom and take us to the right page
     browser.links.find_by_partial_text('Schiaparelli Hemisphere Enhanced').click()
 
     # Create variable to pull html from browser. Using browser.html() with url as argument
     html = browser.html
-
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
@@ -182,7 +146,6 @@ def scrape():
 
     # Create results vaiable to narrow search for Schiaparelli Hemisphere Enhanced title and link
     schiaparelli_results = soup.find_all('div', class_="container")
-
     # for loop schiaparelli_results to scrape Schiaparelli Hemisphere Enhanced title and link
     for schiaparelli in schiaparelli_results:
         
@@ -197,22 +160,15 @@ def scrape():
 
     # ## Create connection and soup for Syrtis Major Hemisphere
 
-    # Set up splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
-
     # Create variable for 'https://mars.nasa.gov/news/' to scrape
     mars_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
-
     # Create connection to browser to scrape current data. Using browser.visit() with url as argument.
     browser.visit(mars_url)
-
     # Use .links.find_by_partial_text.() with 'Syrtis Major Hemisphere Enhanced' argument and .click() to click on that buttom and take us to the right page
     browser.links.find_by_partial_text('Syrtis Major Hemisphere Enhanced').click()
 
     # Create variable to pull html from browser. Using browser.html() with url as argument
     html = browser.html
-
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
@@ -221,7 +177,6 @@ def scrape():
 
     # Create results vaiable to narrow search for Syrtis Major Hemisphere Enhanced title and link
     syrtis_results = soup.find_all('div', class_="container")
-
     # for loop syrtis_results to scrape Syrtis Major Hemisphere Enhanced title and link
     for syrtis in syrtis_results:
         
@@ -236,22 +191,15 @@ def scrape():
         
     # ## Create connection and soup for Valles Marineris Hemisphere
 
-    # Set up splinter
-    executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
-
     # Create variable for 'https://mars.nasa.gov/news/' to scrape
     mars_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
-
     # Create connection to browser to scrape current data. Using browser.visit() with url as argument.
     browser.visit(mars_url)
-
     # Use .links.find_by_partial_text.() with 'Valles Marineris Hemisphere Enhanced' argument and .click() to click on that buttom and take us to the right page
     browser.links.find_by_partial_text('Valles Marineris Hemisphere Enhanced').click()
 
     # Create variable to pull html from browser. Using browser.html() with url as argument
     html = browser.html
-
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
@@ -260,7 +208,6 @@ def scrape():
 
     # Create results vaiable to narrow search for Valles Marineris Hemisphere Enhanced title and link
     valles_marineris_results = soup.find_all('div', class_="container")
-
     # for loop valles_marineris_results to scrape Valles Marineris Hemisphere Enhanced title and link
     for valles_marineris in valles_marineris_results:
         
@@ -283,7 +230,11 @@ def scrape():
         {'title': valles_marineris_title, 'img_url': f'{usgs_base_url}{valles_marineris_link}'}
     ]
     
-
+    mars["new_title"] = news_title
+    mars["news_p"] = news_p
+    mars["featured_image_url"] = featured_image_url
+    mars["mars_tables"] = mars_tables
+    mars["hemisphere_image_urls"] = hemisphere_image_urls
 
     return mars
     
