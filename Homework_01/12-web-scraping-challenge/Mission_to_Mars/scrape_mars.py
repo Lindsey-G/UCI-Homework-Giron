@@ -15,27 +15,22 @@ warnings.filterwarnings('ignore')
 # Set up splinter
 def init_browser():
     executable_path = {'executable_path': ChromeDriverManager().install()}
-    browser = Browser('chrome', **executable_path, headless=False)
+    return Browser('chrome', **executable_path, headless=False)
 
 def scrape():
 
     browser = init_browser()
-    mission_to_mars_data = {}
+    mars = {}
 
     # Create variable for 'https://mars.nasa.gov/news/' to scrape
     nasa_url = 'https://mars.nasa.gov/news/'
-
     # Create connection to browser to scrape current data. Using browser.visit() with url as argument.
     browser.visit(nasa_url)
 
     # Create variable to pull html from browser. Using browser.html() with url as argument
     html = browser.html
-
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
-
-    # Print soup with .prettify()
-    print(soup.prettify())
 
     # Quit browser
     browser.quit()
@@ -97,7 +92,7 @@ def scrape():
 
     # Create results vaiable to narrow search for latest featured image
     image_results = soup.find_all('a', class_="button")
-    image_results
+
 
     # for loop image_results to scrape image_url and featured_image_url
     for image in image_results:
@@ -143,9 +138,6 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
-    # Print soup with .prettify()
-    print(soup.prettify())
-
     # Quit browser
     browser.quit()
 
@@ -163,10 +155,6 @@ def scrape():
         # Create path to extraxt cerberus_title
         locate_title = cerberus.find('div', class_="content")
         cerberus_title = locate_title.h2.text
-
-    # Display variables
-    print(cerberus_title)
-    print(cerberus_link)
 
     # ## Create connection and soup for Schiaparelli Hemisphere
 
@@ -189,9 +177,6 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
-    # Print soup with .prettify()
-    print(soup.prettify())
-
     # Quit browser
     browser.quit()
 
@@ -209,10 +194,6 @@ def scrape():
         # Creat path to schiaparelli_title
         locate_title = schiaparelli.find('div', class_="content")
         schiaparelli_title = locate_title.h2.text
-        
-    # Display variables
-    print(schiaparelli_title)
-    print(schiaparelli_link)
 
     # ## Create connection and soup for Syrtis Major Hemisphere
 
@@ -235,9 +216,6 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
-    # Print soup with .prettify()
-    print(soup.prettify())
-
     # Quiut browser
     browser.quit()
 
@@ -256,10 +234,6 @@ def scrape():
         locate_title = syrtis.find('div', class_="content")
         syrtis_title = locate_title.h2.text
         
-    # Display variables
-    print(syrtis_title)
-    print(syrtis_link)
-
     # ## Create connection and soup for Valles Marineris Hemisphere
 
     # Set up splinter
@@ -281,9 +255,6 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
-    # Print soup with .prettify()
-    print(soup.prettify())
-
     # Quit browser
     browser.quit()
 
@@ -302,10 +273,6 @@ def scrape():
         locate_title = valles_marineris.find('div', class_="content")
         valles_marineris_title = locate_title.h2.text
         
-    # Display variables
-    print(valles_marineris_title)
-    print(valles_marineris_link)
-
     # ## Hemisphere image urls
 
     # Create dictionary with all the Mars titles and url links
@@ -315,8 +282,10 @@ def scrape():
         {'title': syrtis_title, 'img_url': f'{usgs_base_url}{syrtis_link}'},
         {'title': valles_marineris_title, 'img_url': f'{usgs_base_url}{valles_marineris_link}'}
     ]
-    hemisphere_image_urls
+    
 
+
+    return mars
     
 
 
