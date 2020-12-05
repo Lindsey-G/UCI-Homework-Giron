@@ -2,6 +2,7 @@
 # coding: utf-8
 
 # import dependencies
+
 from splinter import Browser
 from bs4 import BeautifulSoup as bs
 from webdriver_manager.chrome import ChromeDriverManager
@@ -17,11 +18,11 @@ def init_browser():
     executable_path = {'executable_path': ChromeDriverManager().install()}
     return Browser('chrome', **executable_path, headless=False)
 
-def scrape():
+browser = init_browser()
+mars = {}
 
-    browser = init_browser()
-    mars = {}
-
+def latest_news():
+        
     # Create variable for 'https://mars.nasa.gov/news/' to scrape
     nasa_url = 'https://mars.nasa.gov/news/'
     # Create connection to browser to scrape current data. Using browser.visit() with url as argument.
@@ -32,31 +33,29 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
-    # Quit browser
-    browser.quit()
-
-    # # NASA Mars News
+    # NASA Mars News
     # Scrape latest article title and subtext
 
     # Create results vaiable to narrow search for news title and subtext 
     results = soup.find_all('ul', class_="item_list")
-
     # for loop results to scrape news_title and news_p
     for result in results:
         # try an dexpect to handle any errors
         try:
             # variable for news_title from result 
-            news_title = result.find('div', class_="content_title").text
+            mars["news_title"] = result.find('div', class_="content_title").text
             # variable for news_p from result              
-            news_p = result.find('div', class_="rollover_description_inner").text
+            mars["news_p"] = result.find('div', class_="rollover_description_inner").text
             
         except AttributeError as e:
             print(e)
     # State that scrape is complete           
-    print("Scrape Completed")
-            
-    # ## Create connection to JPL browser and soup
+    print("Latest News Scrape Completed")
+    
+    return mars
 
+    ## Create connection to JPL browser and soup
+def featured_image():
     # Create variable for 'https://www.jpl.nasa.gov/spaceimages/' to scrape
     jpl_url = 'https://www.jpl.nasa.gov/spaceimages/'
     # Create connection to browser to scrape current data. Using browser.visit() with url as argument.
@@ -69,9 +68,6 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')  
 
-    # Quit browser
-    browser.quit()
-
     # ## JPL Mars Space Images - Featured Image
 
     # Create results vaiable to narrow search for latest featured image
@@ -80,20 +76,33 @@ def scrape():
     # for loop image_results to scrape image_url and featured_image_url
     for image in image_results:
         # Create variable to extract image_url and featured_image_url
-        image_url = image['data-fancybox-href']
-        featured_image_url = f'https://www.jpl.nasa.gov{image_url}'
-        
-    # ## Mars Facts
+        image_url = image('data-fancybox-href')
+        jpl_image_url = 'https://www.jpl.nasa.gov'
+        mars["featured_image_url"] = f'{jpl_image_url}{image_url}'
 
+    print("Image Scrape Complete") 
+
+    return mars
+
+    # Mars Facts
+def mars_facts():
     # Create variable for mars url 
     mars_url = "https://space-facts.com/mars/"
 
     # Using pd.read_html() with mars_url as argument to read in table
     mars_tables = pd.read_html(mars_url)
+
+    #Create Dataframe to store table data
+    df = mars_tables[0]
+    df.columns = ['0', '1']
+    mars_facts = df.to_html()
+    mars["mars_facts"] = mars_facts
+    print("Mars Facts Complete")
+    return mars
     
-    # ## Mars Hemispheres
-    
-    # ## Create connection and soup for Cerberus Hemisphere
+    # Mars Hemispheres
+def mars_hem():
+    # Create connection and soup for Cerberus Hemisphere
 
     # Create base url for each image
     usgs_base_url = 'https://astrogeology.usgs.gov'
@@ -110,9 +119,6 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
-    # Quit browser
-    browser.quit()
-
     # Create results vaiable to narrow search for Cerberus Hemisphere Enhanced title and link
     cerberus_results = soup.find_all('div', class_="container")
     # for loop cerberus_results to scrape Cerberus Hemisphere Enhanced title and link
@@ -126,7 +132,7 @@ def scrape():
         # Create path to extraxt cerberus_title
         locate_title = cerberus.find('div', class_="content")
         cerberus_title = locate_title.h2.text
-
+    print("Cerberus Scrape Complete")
     # ## Create connection and soup for Schiaparelli Hemisphere
 
     # Create variable for 'https://mars.nasa.gov/news/' to scrape
@@ -141,9 +147,6 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
-    # Quit browser
-    browser.quit()
-
     # Create results vaiable to narrow search for Schiaparelli Hemisphere Enhanced title and link
     schiaparelli_results = soup.find_all('div', class_="container")
     # for loop schiaparelli_results to scrape Schiaparelli Hemisphere Enhanced title and link
@@ -157,7 +160,7 @@ def scrape():
         # Creat path to schiaparelli_title
         locate_title = schiaparelli.find('div', class_="content")
         schiaparelli_title = locate_title.h2.text
-
+    print("Schiaparelli Scrape Complete")
     # ## Create connection and soup for Syrtis Major Hemisphere
 
     # Create variable for 'https://mars.nasa.gov/news/' to scrape
@@ -172,9 +175,6 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
-    # Quiut browser
-    browser.quit()
-
     # Create results vaiable to narrow search for Syrtis Major Hemisphere Enhanced title and link
     syrtis_results = soup.find_all('div', class_="container")
     # for loop syrtis_results to scrape Syrtis Major Hemisphere Enhanced title and link
@@ -188,7 +188,7 @@ def scrape():
         # Create path to extraxt syrtis_title
         locate_title = syrtis.find('div', class_="content")
         syrtis_title = locate_title.h2.text
-        
+    print("Syrtis Major Scrape Complete")    
     # ## Create connection and soup for Valles Marineris Hemisphere
 
     # Create variable for 'https://mars.nasa.gov/news/' to scrape
@@ -203,9 +203,6 @@ def scrape():
     # Create soup with bs() with html vairable 
     soup = bs(html, 'html.parser')   
 
-    # Quit browser
-    browser.quit()
-
     # Create results vaiable to narrow search for Valles Marineris Hemisphere Enhanced title and link
     valles_marineris_results = soup.find_all('div', class_="container")
     # for loop valles_marineris_results to scrape Valles Marineris Hemisphere Enhanced title and link
@@ -219,7 +216,7 @@ def scrape():
         # Create path to extract valles_marineris_title
         locate_title = valles_marineris.find('div', class_="content")
         valles_marineris_title = locate_title.h2.text
-        
+    print("Valles Marineris Complete")    
     # ## Hemisphere image urls
 
     # Create dictionary with all the Mars titles and url links
@@ -229,11 +226,7 @@ def scrape():
         {'title': syrtis_title, 'img_url': f'{usgs_base_url}{syrtis_link}'},
         {'title': valles_marineris_title, 'img_url': f'{usgs_base_url}{valles_marineris_link}'}
     ]
-    
-    mars["new_title"] = news_title
-    mars["news_p"] = news_p
-    mars["featured_image_url"] = featured_image_url
-    mars["mars_tables"] = mars_tables
+
     mars["hemisphere_image_urls"] = hemisphere_image_urls
 
     return mars
