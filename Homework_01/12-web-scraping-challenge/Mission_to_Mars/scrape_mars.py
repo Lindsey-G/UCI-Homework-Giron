@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # import dependencies
 from splinter import Browser
 from bs4 import BeautifulSoup as bs

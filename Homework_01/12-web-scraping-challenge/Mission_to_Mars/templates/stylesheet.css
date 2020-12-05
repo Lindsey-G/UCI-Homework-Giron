@@ -1,0 +1,27 @@
+
+html {
+    position: relative;
+}
+body {
+    margin-bottom: 150px;
+}
+h2 {
+    font-size: xx-large;
+}
+h3 {
+    font-size: x-large;
+    
+}
+p {
+    font-size: larger;
+}
+.latest_news {
+    padding: 10px;
+
+}
+.featured_image {
+    padding: 10px;
+}
+.table {
+    padding: 10px;
+}

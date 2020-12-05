@@ -8,66 +8,73 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css"> 
-    
+    <link rel="stylesheet" href="stylesheet.css">
     <title>Mission to Mars</title>
 
 </head>
 
-<body>
+<body class="text-white" style="background-color: rgb(56, 53, 53);">
   <div class="container">
-    <div class="jumbotron text-center">
+    <div class="jumbotron text-center" style="background-color: rgb(185, 20, 20);">
         <h1>Mission to Mars</h1>
-        <p><a class="btn btn-danger btn-lg" href="/scrape" role="button">Explore New Data</a></p>
+        <p><a class="btn btn-dark btn-lg" href="/scrape" role="button">Explore New Data</a></p>
     </div>
 
     <div class="row">
-      <div class="col-sm-12">
+      <div class="col-sm-6 col-md-12 col-lg-12">
         <div class="latest_news">
-          <h2>Latest Mars News</h2>
-          <h3>{{mars.news_title}}</h3>
-          <p>{{mars.news_p}}</p>
+          <h2 style="font-size: xx-large;">Latest Mars News</h2>
+          <h3 style="font-size: x-large;">{{ mars.news_title }}</h3>
+          <p style="font-size: 19px;">{{ mars.news_p }}</p>
         </div>
       </div>
     </div>
-
+<hr>
     <div class="row">
-      <div class="col-8">
+
+      <div class="col-sm-6 col-md-8 col-lg-8">
         <div class="featured_image">
-          <h2>Featured Mars Image</h2>
+          <strong><h2 style="font-size: xx-large;">Featured Mars Image</h2></strong>
             <img src="{{mars.featured_image_url}}" alt="Featured Mars Image">
         </div>
       </div>
 
-      <div class="col-sm-4">
+      <div class="col-sm-6 col-md-4 col-lg-4">
         <h3>Mars Facts</h3>  
-        <table>  
+        <table class="table table-bordered" style="width:2500px;">  
           {{ mars.mars_facts|safe}}   
         </table>
-   
       </div>
 
     </div>
-
-    <div class="text-center">
-      <h2>Mars Hemispheres</h2>
-      
-      <div class="row">
-        <div class="col">
-
-          <figure class="figure">
+<hr>
+    <div style="padding-top:10px; text-align: center;"> 
+      <h3 style="margin-left: -20px;">Mars Hemispheres</h3>
+      <div class="card-deck" style= "padding: 5px;">
+        <div class="col-sm-6 col-md-12 col-lg-12">
+          <div class="row">
             {% for image in mars.hemisphere_image_urls %}
-              <img src="{{image.img_url}}" alt="{{image.title}}">
-              <figcaption class="figure-caption">{{image.title}}</figcaption>
+              <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="card text-white bg-dark" style="width: 300px; height:auto; center; padding: 10px;">
+                  <img src="{{image.img_url}}" class="card-img-top" alt="{{image.title}}" />
+                  <div class="card-body">
+                    <p class="card-text">{{image.title}}</p>
+                  </div>
+                </div>
+              </div>
             {% endfor %}
-          </figure>
-
-        </div>
-
-        </div>
-      </div>
-      
+            </div>     
+          </div>
     </div>
-  </div>
+    
+      
+</body>
+</br>
+</br>  
+</br>
+</br>
+</br>  
+</br>
 </br>
 </br>  
 </br>
@@ -77,3 +84,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
 
 </body>
+</html>
