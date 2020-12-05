@@ -72,14 +72,18 @@ def featured_image():
     image_results = soup.find_all('a', class_="button")
     # for loop image_results to scrape image_url and featured_image_url
     for image in image_results:
-        # Create variable to extract image_url 
-        image_url = image('data-fancybox-href')
-        # Create variale for jpl base url
-        jpl_image_url = 'https://www.jpl.nasa.gov'
-        # Create variable for featured_image_url. Store to mars list.
-        mars["featured_image_url"] = f'{jpl_image_url}{image_url}'
+        try:
+            # Create variable to extract image_url 
+            image_url = image['data-fancybox-href']
+            # Create variale for jpl base url
+            jpl_image_url = 'https://www.jpl.nasa.gov'
+            # Create variable for featured_image_url. Store to mars list.
+            mars["featured_image_url"] = f'{jpl_image_url}{image_url}'
+        except KeyError as e:
+            print("KeyError")
     # Print that scrape is complete to server   
     print("Image Scrape Complete") 
+    print(mars["featured_image_url"])
     # return to mars
     return mars
 
