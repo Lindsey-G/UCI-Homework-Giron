@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-  
+  <div class="container">
     <hr>
     <div class="row">
       <div class="col-sm-6 col-md-8 col-lg-8">
@@ -41,9 +41,10 @@
         </div>
       </div>
   </div>
-  <div class="container">
+
+  <!-- <div class="container"> -->
     <div class="col-sm-6 col-md-4 col-lg-4">
-      <h3>Mars Facts</h3>  
+      <h3 style="font-size: xx-large;">Mars Facts</h3>  
       <table class="table table-bordered">  
         {{ mars.mars_facts|safe}}   
       </table>
@@ -51,10 +52,11 @@
   </div>
 <hr>
     <div style="padding-top:10px; text-align: center;"> 
-      <h3 style="margin-left: -20px;">Mars Hemispheres</h3>
+      <h3 style="font-size: xx-large;">Mars Hemispheres</h3>
       <div class="card-deck" style= "padding: 5px;">
         <div class="col-sm-6 col-md-12 col-lg-12">
           <div class="row">
+            <!-- for loop images and titles -->
             {% for image in mars.hemisphere_image_urls %}
               <div class="col-sm-6 col-md-6 col-lg-6">
                 <div class="card text-white bg-dark" style="width: 300px; height:auto; center; padding: 10px;">
