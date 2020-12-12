@@ -5,12 +5,13 @@ import csv
 # set path
 poll_csv = os.path.join("..", "Resources", "election_data.csv")
 
-# list 
-total_votes = 0
-candidate_list = []
-percentage = 0
-results = []
-total_votes_won = 0
+# Create dictionary to gather totals for each candidate
+candidate_totals = {} 
+# total_votes = 0
+# candidate_list = []
+# percentage = 0
+# results = []
+# total_votes_won = 0
 
 # Open csv path as csv file
 with open(poll_csv, 'r') as csv_file:
@@ -25,7 +26,7 @@ with open(poll_csv, 'r') as csv_file:
     #     candidate.append(row[2])
 
 # Get total amount of votes 
-total_votes = total_votes + 1
+total_votes += 1
 print(total_votes)
 
     # # Create loop for each row in the csv_reader
