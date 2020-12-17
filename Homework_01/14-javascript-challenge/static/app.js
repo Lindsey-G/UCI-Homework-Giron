@@ -6,7 +6,7 @@ submit.on("click", function() {
     
     d3.event.preventDefaul();
 
-    var inputElement = d3.select("input-group");
+    var inputElement = d3.select("date-button");
 
     var inputValue = inputElement.property("value");
 
