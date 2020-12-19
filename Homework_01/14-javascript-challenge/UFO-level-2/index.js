@@ -46,7 +46,7 @@ function runEnter() {
     // make a filter for each input 
     // make conditional filters for input
     // Create filteredResults variable to .filter() through ufo_data to match input results
-    var filteredResults = ufo_data.filter(request => request.datetime === dateResult || request.city === cityResult.toLowerCase() || request.state === stateResult.toLowerCase());
+    var filteredResults = ufo_data.filter(request => request.datetime === dateResult && request.city === cityResult.toLowerCase() && request.state === stateResult.toLowerCase());
 
     // Clear table for filteredResults
     tbody.html("");

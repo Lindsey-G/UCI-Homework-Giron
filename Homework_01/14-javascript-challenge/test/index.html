@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>The Truth Is Out There</title>
+        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+    
+    </head>
+    
+    <body>
+        <div class="container"></div>
+
+            <div class="row">
+                <img src="data:image/jpeg;base64,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" class="img-fluid" alt="The Truth Is Out There">
+            </div>
+
+            <form id="form" class="row gy-2 gx-3 align-items-center">
+
+                <div class="col-auto">
+                    <label class="visually-hidden" for="autoSizingInputGroup">Date</label>
+                    <div class="input-group">
+                        <div class="input-group-text">Date</div>
+                        <input type="text" class="form-control" id="date-input">
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <label class="visually-hidden" for="autoSizingInputGroup">City</label>
+                    <div class="input-group">
+                        <div class="input-group-text">City</div>
+                        <input type="text" class="form-control" id="city-input">
+                    </div>   
+                </div>
+
+                <div class="col-auto">
+                    <label class="visually-hidden" for="autoSizingInputGroup">State</label>
+                    <div class="input-group">
+                        <div class="input-group-text">State</div>
+                        <input type="text" class="form-control" id="state-input">
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <label class="visually-hidden" for="autoSizingInputGroup">Country</label>
+                    <div class="input-group">
+                        <div class="input-group-text">Country</div>
+                        <input type="text" class="form-control" id="country-input">
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <label class="visually-hidden" for="autoSizingInputGroup">Shape</label>
+                    <div class="input-group">
+                        <div class="input-group-text">Shape</div>
+                        <input type="text" class="form-control" id="shape-input">
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <button id= "button" type="submit" class="btn btn-secondary">Submit</button>
+                </div>
+            </form>
+        </div>
+
+    <table class="table">
+        <thead class="table table-dark table-hover">
+            <tr>
+                <th>Date</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Country</th>
+                <th>Shape</th>
+                <th>Duration (min)</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    </body>
+
+    <script src="data.js"></script>
+    <script src="index.js"></script>   
+</html>
