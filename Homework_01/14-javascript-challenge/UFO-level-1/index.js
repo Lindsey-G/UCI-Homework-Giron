@@ -36,17 +36,11 @@ function runEnter() {
     //Prevent the page from refreshing
     d3.event.preventDefault();
 
-    // Create a variable result for each cell input 
-    var dateResult = d3.select("#date-input").property("value");
-    var cityResult = d3.select("#city-input").property("value");
-    var stateResult = d3.select("#state-input").property("value");
-    var countryResult = d3.select("#country-input").property("value");
-    var shapeResult = d3.select("#shape-input").property("value");
+    // Create a variable result for date-input
+    var dateResult = d3.select("#date-input").property("value");    
     
-    // make a filter for each input 
-    // make conditional filters for input
     // Create filteredResults variable to .filter() through ufo_data to match input results
-    var filteredResults = ufo_data.filter(request => request.datetime === dateResult || request.city === cityResult.toLowerCase() || request.state === stateResult.toLowerCase());
+    var filteredResults = ufo_data.filter(request => request.datetime === dateResult);
 
     // Clear table for filteredResults
     tbody.html("");
@@ -65,7 +59,5 @@ function runEnter() {
             // Enter data as text into cell variable (<td>)
             cell.text(value);
         });
-    }); 
-   
+    });    
 };
-
