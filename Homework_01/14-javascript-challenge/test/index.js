@@ -32,55 +32,65 @@ var form = d3.select("#form");
 button.on("click", runEnter);
 form.on("submit", runEnter);
 
-// Create a variable result for each cell input 
-var dateSearch = d3.select("#date-input").property("value");
-var citySearch = d3.select("#city-input").property("value");
-var stateSearch = d3.select("#state-input").property("value");
-var countrySearch = d3.select("#country-input").property("value");
-var shapeSearch = d3.select("#shape-input").property("value");
-
-var dateResult = ufo_data.filter(request => request.datetime === dateSearch);
-var cityResult = ufo_data.filter(request => request.city === citySearch);
-var stateResult = ufo_data.filter(request => request.state === stateSearch);
-var countryResult = ufo_data.filter(request => request.country === countrySearch);
-var shapeResult = ufo_data.filter(request => request.shape === shapeSearch);
-
-
 function runEnter() {
     //Prevent the page from refreshing
     d3.event.preventDefault();
-    if (button === dataSearch)
-        
+
     // Create a variable result for each cell input 
-    // var dateResult = d3.select("#date-input").property("value");
-    // var cityResult = d3.select("#city-input").property("value");
-    // var stateResult = d3.select("#state-input").property("value");
-    // var countryResult = d3.select("#country-input").property("value");
-    // var shapeResult = d3.select("#shape-input").property("value");
-    
-    // make a filter for each input 
-    // make conditional filters for input
-    // Create filteredResults variable to .filter() through ufo_data to match input results
-    var filteredResults = ufo_data.filter(request => request.datetime === dateResult || request.city === cityResult.toLowerCase() || request.state === stateResult.toLowerCase());
+    var dateSearch = d3.select("#date-input").property("value");
+    var citySearch = d3.select("#city-input").property("value");
+    var stateSearch = d3.select("#state-input").property("value");
+    var countrySearch = d3.select("#country-input").property("value");
+    var shapeSearch = d3.select("#shape-input").property("value");
 
-    // Clear table for filteredResults
-    tbody.html("");
-
-    // Create table with filteredResults
-    filteredResults.forEach((info) => {
-        // console.log(info);
-        // Create rows to tbody with .append with tr tag
-        var row = tbody.append("tr");
+    // Create variables for filtered results
+    var dateResult = ufo_data.filter(request => request.datetime === dateSearch);
+    var cityResult = ufo_data.filter(request => request.city === citySearch);
+    var stateResult = ufo_data.filter(request => request.state === stateSearch);
+    var countryResult = ufo_data.filter(request => request.country === countrySearch);
+    var shapeResult = ufo_data.filter(request => request.shape === shapeSearch);
+    var filteredResults = ufo_data.filter(request => request.datetime === dateResult && request.city === cityResult.toLowerCase() && request.state === stateResult.toLowerCase());
     
-        // with Object create entries to get key an value for each on to then append value
-        Object.entries(info).forEach(([key, value]) => {
-            // console.log(key, value);
-            // .append <td> to table for data
-            var cell = tbody.append("td");
-            // Enter data as text into cell variable (<td>)
-            cell.text(value);
-        });
-    }); 
+    if (dateSearch)
+        newResults(dateResult);
+        
+    else if (citySearch)
+        newResults(citySearch);
+         
+    else if (stateSearch)
+        newResults(stateResult);
+                
+    else if (countrySearch)
+        newResults(button === countryResult);
+                    
+    else if (shapeSearch)
+        newResults(shapeResult);
+    
+    else if (dateSearch && citySearch && stateSearch) 
+        newResults(filteredResults);            
+        
+    else
+
+        // Clear table for filteredResults
+        tbody.html("");
+
+        // Create table with filteredResults
+        function newResults(info) {
+            ufo_data.forEach((info) => {
+            // console.log(info);
+                // Create rows to tbody with .append with tr tag
+                var row = tbody.append("tr");
+    
+                    // with Object create entries to get key an value for each on to then append value
+                    Object.entries(info).forEach(([key, value]) => {
+                    // console.log(key, value);
+                    // .append <td> to table for data
+                    var cell = tbody.append("td");
+                    // Enter data as text into cell variable (<td>)
+                    cell.text(value);
+                });
+            });
+        };    
    
 };
 

@@ -40,8 +40,8 @@ function runEnter() {
     var dateResult = d3.select("#date-input").property("value");
     var cityResult = d3.select("#city-input").property("value");
     var stateResult = d3.select("#state-input").property("value");
-    var countryResult = d3.select("#country-input").property("value");
-    var shapeResult = d3.select("#shape-input").property("value");
+    // var countryResult = d3.select("#country-input").property("value");
+    // var shapeResult = d3.select("#shape-input").property("value");
     
     // make a filter for each input 
     // make conditional filters for input
