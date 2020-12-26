@@ -1,51 +1,76 @@
 // run python -m http.server for local host 8000
 
 d3.json("samples.json").then((data) => {
-    
-    var dropdownMenu = data.names;
-    console.log(dropdownMenu);
-    // var testId = data.samples[0].id;
-    // console.log(testId);
+    var defaultTrace = {
+        y: data.samples[0].id,
+        x: data.samples[0].sample_values,
+        text: data.samples[0].otu_labels,
+        type: "bar",
+        orientation: "h"
+    };
+    Plotly.newPlot("plot", defaultTrace);
+
+    // var dropdownMenu = 940;
+    // var getId = data.samples[0];
+    // console.log(getId);
     // // Pull otu_ids data
-    // var testOTUsIds = data.samples.map(item => item.otu_ids);
-    // console.log(testOTUsIds);
+    // var OTUsIds = getId.otu_ids;
+    // console.log(OTUsIds.slice(0, 10));
     // //Pull sample_values
-    // var OTUsValues = data.samples.map(item => item.sample_values);
-    // console.log(OTUsValues);
+    // var OTUsValues = getId.sample_values;
+    // console.log(OTUsValues.slice(0, 10));
     // // Pull otu_labels
-    // var OTUsLabels = data.samples.map(item => item.otu_labels);
-    // console.log(OTUsLabels);
+    // var OTUsLabels = getId.otu_labels;
+    // console.log(OTUsLabels.slice(0, 10));
 
-    for (var i = 0; i < data.length; i++)
+    // var trace1 = {
+    //     y: OTUsIds.slice(0, 10),
+    //     x: OTUsValues.slice(0, 10),
+    //     text: OTUsLabels.slice(0, 10), 
+    //     type: "bar",
+    //     orientation: "h"
+    // };
+    // Plotly.newPlot("plot", trace1);
+    //get array of ids
+    // var dropdownMenu = data.names;
+    // console.log(dropdownMenu);
+    // var dropdownMenu = 940;
+    // create dropdownmenu
+    // var sel = document.getElementById("#selDataset");
+    // var fragment = document.createDocumentFragment();
 
-        if (dropdownMenu === data.samples[0].id)
+    // dropdownMenu.forEach(function (dropdown, index){
+    //     var opt = document.createElement('optionChanged');
+    //     opt.innerHTML = dropdown;
+    //     opt.value = dropdown;
+    //     fragment.appendChild(opt);
+    // });
+    // sel.appendChild(fragment);
 
-            // var getId = data.samples[0].id;
-            // console.log(getId);
-            // Pull otu_ids data
-            var OTUsIds = data.samples.map(item => item.otu_ids);
-            console.log(OTUsIds);
-            //Pull sample_values
-            var OTUsValues = data.samples.map(item => item.sample_values);
-            console.log(OTUsValues);
-            // Pull otu_labels
-            var OTUsLabels = data.samples.map(item => item.otu_labels);
-            console.log(OTUsLabels);
-            // var eachIdsOTUs = dropdownMenu.samples[2];
-            // console.log(eachIdsOTUs);
-            // slice data for top 10 
-            var topTenOTUs = OTUsIds.slice(0, 10);
-            // reverse data to get decending order
-            var reversedTopTenOTUs = topTenOTUs.reverse();
-            console.log(reversedTopTenOTUs);
+    // for (var i = 0; i < data.length; i++)
 
+    //     if (dropdownMenu === data.samples[0].id)
+    //         // get id as an object
+    //         var getId = data.samples[0];
+    //         console.log(getId);
+    //         // Pull otu_ids data
+    //         var OTUsIds = getId.otu_ids;
+    //         console.log(OTUsIds);
+    //         //Pull sample_values
+    //         var OTUsValues = getId.sample_values;
+    //         console.log(OTUsValues);
+    //         // Pull otu_labels
+    //         var OTUsLabels = getId.otu_labels;
+    //         console.log(OTUsLabels);
 
-        // var trace1 = {
-        //     y: reversedTopTenOTUs.map(item => item.otu_ids),
-        //     x: reversedTopTenOTUs.map(item => item.sample_values),
-        //     text: reversedTopTenOTUs.map(item => item.otu_labels)
-        // };
-        // Plotly.newPlot("OTUs-top-ten", trace1)
+    //     var trace1 = {
+    //         y: OTUsIds.slice(0, 10),
+    //         x: OTUsValues.slice(0, 10),
+    //         text: OTUsLabels.slice(0, 10), 
+    //         type: "bar",
+    //         orientation: "h"
+    //     };
+    //     Plotly.newPlot("plot", trace1);
 
 });
  
