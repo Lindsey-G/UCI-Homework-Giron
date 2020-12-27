@@ -1,14 +1,56 @@
 // run python -m http.server for local host 8000
 
 d3.json("samples.json").then((data) => {
-    var defaultTrace = {
-        y: data.samples[0].id,
-        x: data.samples[0].sample_values,
-        text: data.samples[0].otu_labels,
-        type: "bar",
-        orientation: "h"
-    };
-    Plotly.newPlot("plot", defaultTrace);
+    
+    function init() {
+        // Create default variables for otu_ids, sample_values, and otu_labels
+        var defaultOTUsIds = data.samples[0].otu_ids;
+        var defaultSampleValues = data.samples[0].sample_values;
+        var defaultText = data.samples[0].otu_labels;
+
+        // Slice default variables to contain only top 10 
+        var slicedDefaultOTUsIds = defaultOTUsIds.slice(0, 10);
+        var slicedDefaultSampleValues = defaultSampleValues.slice(0, 10);
+        var slicedDefaultText = defaultText.slice(0, 10);
+
+        // Confirm data is correct on console
+        console.log(slicedDefaultOTUsIds);
+        console.log(slicedDefaultSampleValues);
+        console.log(slicedDefaultText);
+
+        // Create default plot
+        var defaultBarChart = [{
+            y: slicedDefaultOTUsIds,
+            x: slicedDefaultSampleValues,
+            text: slicedDefaultText,
+            type: "bar",
+            orientation: "h"
+        }];
+
+        var layout = {
+            yaxis: {title: "OTU IDS"},
+            xaxis: {title: "Sample Values"}
+
+
+        };
+        // Create Demographic chart
+        
+        var defaultDemoChart = [{
+            
+        }];
+        Plotly.newPlot("plot", defaultBarChart, layout);
+
+
+    }
+    init()
+    // var defaultTrace = {
+    //     y: data.samples[0].id,
+    //     x: data.samples[0].sample_values,
+    //     text: data.samples[0].otu_labels,
+    //     type: "bar",
+    //     orientation: "h"
+    // };
+    // Plotly.newPlot("plot", defaultTrace);
 
     // var dropdownMenu = 940;
     // var getId = data.samples[0];
