@@ -3,9 +3,10 @@
 d3.json("samples.json").then((data) => {
 
     var dropdown = data.names;
-    console.log(dropdown);
+    // console.log(dropdown);
+    var dropMenu = d3.select("selDataset");
     dropdown.forEach((item) => {
-        d3.select("selDataset").append(item);    
+        dropMenu.append(item);    
     });
 
     function init() {
@@ -116,9 +117,9 @@ d3.json("samples.json").then((data) => {
 
         // Create Demographic chart
         var defaultMetadata = data.metadata[0];
-        // console.log(defaultMetadata);
+        console.log(defaultMetadata);
+        d3.select("sample-metadata").append(defaultMetadata);
 
-        
         // var panelBody = d3.select("ul").append("li");
         // $.each(defaultMetadata, function(key, value) {
         //     $("#sample-metadata").append(`<li>${key}: ${value}</li>`);
@@ -161,9 +162,7 @@ d3.json("samples.json").then((data) => {
             value: defaultWFreq,
             title: {text: "Belly Button Washing Frequency", font: {size: 25}},
             gauge: {
-                axis: {range: [0, 9]}
-            },
-            steps: [
+                axis: [
                 { range: [0, 1], color: "rgba (97,209,139,)"},
                 { range: [1, 2], color: "rgba (77,203,124)"},
                 { range: [2, 3], color: "rgba (57,197,110)"},
@@ -171,9 +170,10 @@ d3.json("samples.json").then((data) => {
                 { range: [4, 5], color: "rgba (50,171,96)"},
                 { range: [5, 6], color: "rgba (46,158,88)"},
                 { range: [7, 8], color: "rgba (40,138,77)"},
-                { range: [8, 9], color: "rgba (34,118,66)"}
+                { range: [8, 9], color: "rgba (34,118,66)"}]
+            }
 
-            ]
+           
         }];
 
         var gaugeLayout = {
