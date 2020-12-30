@@ -2,6 +2,12 @@
 
 d3.json("samples.json").then((data) => {
 
+    var dropdown = data.names;
+    console.log(dropdown);
+    dropdown.forEach((item) => {
+        d3.select("selDataset").append(item);    
+    });
+
     function init() {
         // Create default variables for otu_ids, sample_values, and otu_labels
         var defaultOTUsIds = data.samples[0].otu_ids;
@@ -77,10 +83,11 @@ d3.json("samples.json").then((data) => {
 
         Plotly.newPlot("OTUs-top-ten", defaultBarChart, barChartLayout);
         
-        // Create Bubble Chart
-
+        // Bubble Chart
+        // Create variable for selected name
         var currentName = data.names[0];
         // console.log(currentName);
+        // Create Bubble Chart
         var defaultBubbleChart = [{
             x: defaultOTUsIds,
             y: defaultSampleValues,
@@ -111,38 +118,76 @@ d3.json("samples.json").then((data) => {
         var defaultMetadata = data.metadata[0];
         // console.log(defaultMetadata);
 
+        
+        // var panelBody = d3.select("ul").append("li");
+        // $.each(defaultMetadata, function(key, value) {
+        //     $("#sample-metadata").append(`<li>${key}: ${value}</li>`);
+        // });
 
-        // // var metaReady = [];
-        // // defaultMetadata.forEach(function([key, value]){
-        // //     metaReady.push(`${key}: ${value}`);
-        // //     // var panelBody = d3.select("ul").append("li");
-        // //     // panelBody.text(Object.entries(metaReady));
-        // // });
-        // // console.log(metaReady);
+        // each(defaultMetadata, (key, value, defaultMetadata) => {
+        //     // var panelBody = d3.select("ul").append("li");
+        //     // panelBody.text(`${key}: ${value}`);
+        //     console.log(`${key}: ${value}`);
+        // });
+        // var metaReady = [];
+        // defaultMetadata.forEach(function([key, value]){
+        //     metaReady.push(`${key}: ${value}`);
+        //     // var panelBody = d3.select("ul").append("li");
+        //     // panelBody.text(Object.entries(metaReady));
+        // });
+        // console.log(metaReady);
 
         // // console.log(Object.entries(defaultMetadata));
         // var panelBody = d3.select("ul").append("li");
-        // // panelBody.text(Object.entries(metaReady));
-        // // var panelBody = d3.select("ul").append("li");
-        // // panelBody.text(Object.entries(defaultMetadata));
+        // // // panelBody.text(Object.entries(metaReady));
+        // // // var panelBody = d3.select("ul").append("li");
+        // // // panelBody.text(Object.entries(defaultMetadata));
 
         // defaultMetadata.forEach((item) => {
         //     console.log(item);
         //     Object.entries(item).forEach(([key, value]) => {
-        //         panelBody.text(`${key}: ${value}`);
+        //         panelBody.text.append(`${key}: ${value}`);
         //     });
         // });
 
+        // Gauge Chart
+        // Create variable for washing frequency
+        var defaultWFreq = data.metadata[0].wfreq;
+        // console.log(defaultWFreq);
+        // Create Gauge Chart
+        var gaugeDefault = [{
+            type: "indicator",
+            mode: "gauge+number+delta",
+            value: defaultWFreq,
+            title: {text: "Belly Button Washing Frequency", font: {size: 25}},
+            gauge: {
+                axis: {range: [0, 9]}
+            },
+            steps: [
+                { range: [0, 1], color: "rgba (97,209,139,)"},
+                { range: [1, 2], color: "rgba (77,203,124)"},
+                { range: [2, 3], color: "rgba (57,197,110)"},
+                { range: [3, 4], color: "rgba (51,177,99)"},
+                { range: [4, 5], color: "rgba (50,171,96)"},
+                { range: [5, 6], color: "rgba (46,158,88)"},
+                { range: [7, 8], color: "rgba (40,138,77)"},
+                { range: [8, 9], color: "rgba (34,118,66)"}
+
+            ]
+        }];
+
+        var gaugeLayout = {
+            width: 500,
+            height: 400,
+            margin: {t: 25, r: 25, l: 25, b: 25},
+            paper_bgcolor: "lavender",
+            font: {color: "purple", family: "Arial"} 
+        };
+
+        Plotly.newPlot("gauge", gaugeDefault, gaugeLayout);
+
     };
     init()
-    // var defaultTrace = {
-    //     y: data.samples[0].id,
-    //     x: data.samples[0].sample_values,
-    //     text: data.samples[0].otu_labels,
-    //     type: "bar",
-    //     orientation: "h"
-    // };
-    // Plotly.newPlot("plot", defaultTrace);
 
     // var dropdownMenu = 940;
     // var getId = data.samples[0];
@@ -157,14 +202,7 @@ d3.json("samples.json").then((data) => {
     // var OTUsLabels = getId.otu_labels;
     // console.log(OTUsLabels.slice(0, 10));
 
-    // var trace1 = {
-    //     y: OTUsIds.slice(0, 10),
-    //     x: OTUsValues.slice(0, 10),
-    //     text: OTUsLabels.slice(0, 10), 
-    //     type: "bar",
-    //     orientation: "h"
-    // };
-    // Plotly.newPlot("plot", trace1);
+
     //get array of ids
     // var dropdownMenu = data.names;
     // console.log(dropdownMenu);
