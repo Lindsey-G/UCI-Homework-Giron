@@ -1,7 +1,7 @@
 // run python -m http.server for local host 8000
 
 d3.json("samples.json").then((data) => {
-    
+
     function init() {
         // Create default variables for otu_ids, sample_values, and otu_labels
         var defaultOTUsIds = data.samples[0].otu_ids;
@@ -13,35 +13,127 @@ d3.json("samples.json").then((data) => {
         var slicedDefaultSampleValues = defaultSampleValues.slice(0, 10);
         var slicedDefaultText = defaultText.slice(0, 10);
 
+        // Turn Id numbers into string and added "OTU" so that when plotting 
+        // bar chart it displays as a string value instead of a range of integer vaules
+        var stringIds = [];
+        slicedDefaultOTUsIds.forEach(item => {
+            stringIds.push("OTU" + " " + item + "");
+        });
+        
+        // .reverse() so that list are in decending order
+        stringIds.reverse();
+        slicedDefaultSampleValues.reverse();
+        slicedDefaultText.reverse();
+
         // Confirm data is correct on console
-        console.log(slicedDefaultOTUsIds);
-        console.log(slicedDefaultSampleValues);
-        console.log(slicedDefaultText);
+        // console.log(stringIds);
+        // console.log(slicedDefaultSampleValues);
+        // console.log(slicedDefaultText);
 
         // Create default plot
         var defaultBarChart = [{
-            y: slicedDefaultOTUsIds,
+            type: 'bar',
             x: slicedDefaultSampleValues,
+            y: stringIds,
             text: slicedDefaultText,
-            type: "bar",
-            orientation: "h"
+            orientation: 'h',
+            marker: {
+                color: 'rgba (50,171,96,0.6)',
+                line: {
+                    color: 'rgba (50, 171, 96, 1.0)',
+                    width: 1
+                }
+            },
+    
         }];
 
-        var layout = {
-            yaxis: {title: "OTU IDS"},
-            xaxis: {title: "Sample Values"}
-
+        var barChartLayout = {
+            title: "Top Ten OTU's",
+            // yaxis: {title: "IDS"},
+            xaxis: {title: "Sample Values"},
+            range: [0, 20],
+            domain: [0, 0.5],
+            zeroline: false,
+            showline: false,
+            showticklabels: true,
+            showgrid: true,
+            legend: {
+                x: 0.029,
+                y: 1.238,
+                font: {
+                    family: 'Arial',
+                    size: 10
+                }
+            },
+            width: 300,
+            height: 500,
+            paper_bgcolor: 'rgb (248,248,255)',
+            plot_bgcolor: 'rgb(248,248,255)',
+            font: {
+                family: 'Arial'
+            }
 
         };
-        // Create Demographic chart
+
+        Plotly.newPlot("OTUs-top-ten", defaultBarChart, barChartLayout);
         
-        var defaultDemoChart = [{
-            
+        // Create Bubble Chart
+
+        var currentName = data.names[0];
+        // console.log(currentName);
+        var defaultBubbleChart = [{
+            x: defaultOTUsIds,
+            y: defaultSampleValues,
+            text: defaultText,
+            mode: 'markers',
+            marker: {
+                color: defaultOTUsIds,
+                size: defaultSampleValues
+            }
         }];
-        Plotly.newPlot("plot", defaultBarChart, layout);
+
+        var bubbleLayout = {
+            title: `All of ${currentName}'s OTU Samples`,
+            xaxis: {title: "OTU ID"},
+            yaxis: {title: "Sample Values"},
+            height: 600,
+            width: 1200,
+            paper_bgcolor: 'rgb (248,248,255)',
+            plot_bgcolor: 'rgb(248,248,255)',
+            font: {
+                family: 'Arial'
+            }
+        };
+        
+        Plotly.newPlot("bubble", defaultBubbleChart, bubbleLayout);
+
+        // Create Demographic chart
+        var defaultMetadata = data.metadata[0];
+        // console.log(defaultMetadata);
 
 
-    }
+        // // var metaReady = [];
+        // // defaultMetadata.forEach(function([key, value]){
+        // //     metaReady.push(`${key}: ${value}`);
+        // //     // var panelBody = d3.select("ul").append("li");
+        // //     // panelBody.text(Object.entries(metaReady));
+        // // });
+        // // console.log(metaReady);
+
+        // // console.log(Object.entries(defaultMetadata));
+        // var panelBody = d3.select("ul").append("li");
+        // // panelBody.text(Object.entries(metaReady));
+        // // var panelBody = d3.select("ul").append("li");
+        // // panelBody.text(Object.entries(defaultMetadata));
+
+        // defaultMetadata.forEach((item) => {
+        //     console.log(item);
+        //     Object.entries(item).forEach(([key, value]) => {
+        //         panelBody.text(`${key}: ${value}`);
+        //     });
+        // });
+
+    };
     init()
     // var defaultTrace = {
     //     y: data.samples[0].id,
@@ -115,4 +207,3 @@ d3.json("samples.json").then((data) => {
     //     Plotly.newPlot("plot", trace1);
 
 });
- 
