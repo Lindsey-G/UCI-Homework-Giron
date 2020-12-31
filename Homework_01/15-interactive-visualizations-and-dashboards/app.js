@@ -1,48 +1,124 @@
 // run python -m http.server for local host 8000
+// List dataset info for quick reference
+/**
+ * @param {array} rows 
+ * @param {integer} index
+ * metadata array [1]:
+ * index 0 - id
+ * index 1 - ethnicity
+ * index 2 - gender
+ * index 3 - age
+ * index 4 - location
+ * index 5 - bbtype
+ * index 6 - wfreq
+ * samples array[2]:
+ * index 0 - id
+ * index 1 - otu_ids
+ * index 2 - sample_values
+ * index 3 - otu_labels
+ */
+
+ function unpack(rows, index) {
+    return rows.map(function(row) {
+        return row[index];
+    });
+  }
 
 d3.json("samples.json").then((data) => {
 
-    var dropdown = data.names;
-    // console.log(dropdown);
-    var dropMenu = d3.select("selDataset");
-    dropdown.forEach((item) => {
-        dropMenu.append(item);    
-    });
+    /** Create variables for names, otu_ids, sample_values, otu_labels, 
+    metadata, and wfreq to use on plots*/
+    var individualNames = data.names;
+    var OTUsIds = unpack(data.samples, 'otu_ids');
+    var sampleValues = unpack(data.samples, 'sample_values');
+    var OTUsLabels = unpack(data.samples, 'otu_labels');
+    var OTUsMetadata = data.metadata;
+    var wfreq = unpack(data.metadata, 'wfreq');
+    
+    // Confirm data is displaying correctly
+    // console.log(individualNames);
+    // console.log(OTUsIds);
+    // console.log(sampleValues);
+    // console.log(OTUsLabels);
+    // console.log(OTUsMetadata);
+    // console.log(wfreq);
 
-    function init() {
-        // Create default variables for otu_ids, sample_values, and otu_labels
-        var defaultOTUsIds = data.samples[0].otu_ids;
-        var defaultSampleValues = data.samples[0].sample_values;
-        var defaultText = data.samples[0].otu_labels;
+    // Create empty list for current selected data
+    var namesList = [];
+    var currentOTUsIds = [];
+    var currentSampleValues = [];
+    var currentOTUsLabels = [];
+    var currentOTUsMetadata = [];
+    var currentWFreq = [];
 
-        // Slice default variables to contain only top 10 
-        var slicedDefaultOTUsIds = defaultOTUsIds.slice(0, 10);
-        var slicedDefaultSampleValues = defaultSampleValues.slice(0, 10);
-        var slicedDefaultText = defaultText.slice(0, 10);
+    // for loop to itterate through individualNames array
+    for (var i = 0; i < individualNames.length; i++){
+        if (namesList.indexOf(individualNames[i]) === -1 ) {
+            namesList.push(individualNames[i]);
+        }
+    }
+    // console.log(namesList);  
+
+    // Create function to retrieve data and store in list
+    function getNameData(name) {
+
+        currentOTUsIds = [];
+        currentSampleValues = [];
+        currentOTUsLabels = [];
+        currentOTUsMetadata = [];
+        currentWFreq = [];
+
+        for (var i = 0; i < namesList.length; i ++) {
+            if (namesList[i] === name) {
+                currentOTUsIds.push(OTUsIds[i]);
+                currentSampleValues.push(sampleValues[i]);
+                currentOTUsLabels.push(OTUsLabels[i]);
+                currentOTUsMetadata.push(OTUsMetadata[i]);
+                currentWFreq.push(wfreq[i]);
+            }
+        }    
+    };
+
+    // Default Data
+    createPlots('940'); 
+    
+    function createPlots(name) {
+        
+        getNameData(name);
+
+        // Slice data for Top Ten OTU's Bar Chart
+        var slicedOTUsIds = currentOTUsIds[0].slice(0, 10);
+        var slicedSampleValues = currentSampleValues[0].slice(0, 10);
+        var slicedOTUsLabels = currentOTUsLabels[0].slice(0, 10);
+
+        // Reverse data from slice to get descending order
+        slicedOTUsIds.reverse();
+        slicedSampleValues.reverse();
+        slicedOTUsLabels.reverse();
+    
+        /** Remove null values from wfreq array, only array with null all others */
+        var cleanWFreq = currentWFreq.filter((item) => {
+            return item != null;
+        }) 
 
         // Turn Id numbers into string and added "OTU" so that when plotting 
         // bar chart it displays as a string value instead of a range of integer vaules
         var stringIds = [];
-        slicedDefaultOTUsIds.forEach(item => {
+        slicedOTUsIds.forEach(item => {
             stringIds.push("OTU" + " " + item + "");
-        });
-        
-        // .reverse() so that list are in decending order
-        stringIds.reverse();
-        slicedDefaultSampleValues.reverse();
-        slicedDefaultText.reverse();
+        });        
 
-        // Confirm data is correct on console
+        // Confirm data is displaying correctly
         // console.log(stringIds);
-        // console.log(slicedDefaultSampleValues);
-        // console.log(slicedDefaultText);
+        // console.log(slicedSampleValues);
+        // console.log(slicedOTUsLabels); 
+        // console.log(cleanWFreq);      
 
-        // Create default plot
-        var defaultBarChart = [{
+        var topTenBarChart = [{
             type: 'bar',
-            x: slicedDefaultSampleValues,
+            x: slicedSampleValues,
             y: stringIds,
-            text: slicedDefaultText,
+            text: slicedOTUsLabels,
             orientation: 'h',
             marker: {
                 color: 'rgba (50,171,96,0.6)',
@@ -82,26 +158,21 @@ d3.json("samples.json").then((data) => {
 
         };
 
-        Plotly.newPlot("OTUs-top-ten", defaultBarChart, barChartLayout);
-        
-        // Bubble Chart
-        // Create variable for selected name
-        var currentName = data.names[0];
-        // console.log(currentName);
-        // Create Bubble Chart
-        var defaultBubbleChart = [{
-            x: defaultOTUsIds,
-            y: defaultSampleValues,
-            text: defaultText,
+        Plotly.newPlot("OTUs-top-ten", topTenBarChart, barChartLayout);
+
+        var bubbleChart = [{
+            x: currentOTUsIds[0],
+            y: currentSampleValues[0],
+            text: currentOTUsLabels[0],
             mode: 'markers',
             marker: {
-                color: defaultOTUsIds,
-                size: defaultSampleValues
+                color: currentOTUsIds[0],
+                size: currentSampleValues[0]
             }
         }];
 
         var bubbleLayout = {
-            title: `All of ${currentName}'s OTU Samples`,
+            title: `All of ${name}'s OTU Samples`,
             xaxis: {title: "OTU ID"},
             yaxis: {title: "Sample Values"},
             height: 600,
@@ -113,7 +184,37 @@ d3.json("samples.json").then((data) => {
             }
         };
         
-        Plotly.newPlot("bubble", defaultBubbleChart, bubbleLayout);
+        Plotly.newPlot("bubble", bubbleChart, bubbleLayout);
+
+        var gaugePlot = [{
+            type: "indicator",
+            mode: "gauge+number+delta",
+            value: cleanWFreq[0],
+            title: {text: "Belly Button Washing Frequency", font: {size: 25}},
+            gauge: {
+                axis: [
+                { range: [0, 1], color: "rgba (97,209,139,)"},
+                { range: [1, 2], color: "rgba (77,203,124)"},
+                { range: [2, 3], color: "rgba (57,197,110)"},
+                { range: [3, 4], color: "rgba (51,177,99)"},
+                { range: [4, 5], color: "rgba (50,171,96)"},
+                { range: [5, 6], color: "rgba (46,158,88)"},
+                { range: [7, 8], color: "rgba (40,138,77)"},
+                { range: [8, 9], color: "rgba (34,118,66)"}]
+            }
+
+           
+        }];
+
+        var gaugeLayout = {
+            width: 500,
+            height: 400,
+            margin: {t: 25, r: 25, l: 25, b: 25},
+            paper_bgcolor: 'lavendar',
+            font: {color: "purple", family: "Arial"} 
+        };
+
+        Plotly.newPlot("gauge", gaugePlot, gaugeLayout);
 
         // Create Demographic chart
         var defaultMetadata = data.metadata[0];
@@ -151,97 +252,14 @@ d3.json("samples.json").then((data) => {
         //     });
         // });
 
-        // Gauge Chart
-        // Create variable for washing frequency
-        var defaultWFreq = data.metadata[0].wfreq;
-        // console.log(defaultWFreq);
-        // Create Gauge Chart
-        var gaugeDefault = [{
-            type: "indicator",
-            mode: "gauge+number+delta",
-            value: defaultWFreq,
-            title: {text: "Belly Button Washing Frequency", font: {size: 25}},
-            gauge: {
-                axis: [
-                { range: [0, 1], color: "rgba (97,209,139,)"},
-                { range: [1, 2], color: "rgba (77,203,124)"},
-                { range: [2, 3], color: "rgba (57,197,110)"},
-                { range: [3, 4], color: "rgba (51,177,99)"},
-                { range: [4, 5], color: "rgba (50,171,96)"},
-                { range: [5, 6], color: "rgba (46,158,88)"},
-                { range: [7, 8], color: "rgba (40,138,77)"},
-                { range: [8, 9], color: "rgba (34,118,66)"}]
-            }
+              // function updatePlotly() {
+        //     var dropdownMenu = d3.select("selDataset");
+        //     var newData = dropMenu.property("value");
 
-           
-        }];
+        //     if (dataset === data.names)
 
-        var gaugeLayout = {
-            width: 500,
-            height: 400,
-            margin: {t: 25, r: 25, l: 25, b: 25},
-            paper_bgcolor: "lavender",
-            font: {color: "purple", family: "Arial"} 
-        };
-
-        Plotly.newPlot("gauge", gaugeDefault, gaugeLayout);
+        // }
 
     };
-    init()
-
-    // var dropdownMenu = 940;
-    // var getId = data.samples[0];
-    // console.log(getId);
-    // // Pull otu_ids data
-    // var OTUsIds = getId.otu_ids;
-    // console.log(OTUsIds.slice(0, 10));
-    // //Pull sample_values
-    // var OTUsValues = getId.sample_values;
-    // console.log(OTUsValues.slice(0, 10));
-    // // Pull otu_labels
-    // var OTUsLabels = getId.otu_labels;
-    // console.log(OTUsLabels.slice(0, 10));
-
-
-    //get array of ids
-    // var dropdownMenu = data.names;
-    // console.log(dropdownMenu);
-    // var dropdownMenu = 940;
-    // create dropdownmenu
-    // var sel = document.getElementById("#selDataset");
-    // var fragment = document.createDocumentFragment();
-
-    // dropdownMenu.forEach(function (dropdown, index){
-    //     var opt = document.createElement('optionChanged');
-    //     opt.innerHTML = dropdown;
-    //     opt.value = dropdown;
-    //     fragment.appendChild(opt);
-    // });
-    // sel.appendChild(fragment);
-
-    // for (var i = 0; i < data.length; i++)
-
-    //     if (dropdownMenu === data.samples[0].id)
-    //         // get id as an object
-    //         var getId = data.samples[0];
-    //         console.log(getId);
-    //         // Pull otu_ids data
-    //         var OTUsIds = getId.otu_ids;
-    //         console.log(OTUsIds);
-    //         //Pull sample_values
-    //         var OTUsValues = getId.sample_values;
-    //         console.log(OTUsValues);
-    //         // Pull otu_labels
-    //         var OTUsLabels = getId.otu_labels;
-    //         console.log(OTUsLabels);
-
-    //     var trace1 = {
-    //         y: OTUsIds.slice(0, 10),
-    //         x: OTUsValues.slice(0, 10),
-    //         text: OTUsLabels.slice(0, 10), 
-    //         type: "bar",
-    //         orientation: "h"
-    //     };
-    //     Plotly.newPlot("plot", trace1);
-
+    createPlots()
 });
