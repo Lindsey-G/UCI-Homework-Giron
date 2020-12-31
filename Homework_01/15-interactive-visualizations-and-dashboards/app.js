@@ -244,52 +244,26 @@ d3.json("samples.json").then((data) => {
             var menuList = d3.select("#selDataset").append("option");
             menuList.text(`${value}`);
         }
-        //
-        d3.selectAll("#selDataset").on("change", newData);
+        
+        d3.selectAll("#selDataset").on("change", updateData);
         // 
-        function newData(nameData){
+        function updateData(){
 
             var dropdownMenu = d3.select("#selDataset");
             var dataset = dropdownMenu.property("value");
-            var data = [];
-            if (dataset === nameData)
-                data = nameData;
+
+            var newDataSelected = [];
+            
+            if (dataset === namesList) {
+                newDataSelected.push(namesList);
+            }
+            
+            // createPlots(newDataSelected);
          }
-        createPlots(data);
+        console.log(newDataSelected);
 
     };
     createPlots();
-
-    // d3.selectAll("#selDataset").on("change", newData);
-    // function newData(nameData){
-
-    //     var dropdownMenu = d3.select("#selDataset").property("value");
-
-    //     var data = [];
-    //     if (dropdownMenu === nameData)
-    //         updatePlotly(data);
-    // }
-
-    // function updatePlotly(newData) {
-    // //     Plotly.restyle("", "values", [newdata]);
-    // }
-    // // var plotEl = querySelector("#selDataset");
-    // var nameSelector = document.querySelector("#selDataset");
-
-    // function assignOptions(textArray, selector) {
-    //     for (var i = 0; i < textArray.length; i++) {
-    //         var currentOption = document.createElement('option');
-    //         currentOption.text = textArray[i];
-    //         selector.appendChild(currentOption);
-    //     }
-    // }
-    // assignOptions(namesList, nameSelector);
-
-    // function updateName () {
-    //     createPlots(nameSelector.value);
-    // }
-
-    // nameSelector.addEventListener('change', updateName, false);
 
 });
 
