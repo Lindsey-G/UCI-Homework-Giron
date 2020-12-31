@@ -18,7 +18,7 @@
  * index 3 - otu_labels
  */
 
- function unpack(rows, index) {
+function unpack(rows, index) {
     return rows.map(function(row) {
         return row[index];
     });
@@ -58,22 +58,27 @@ d3.json("samples.json").then((data) => {
         }
     }
     // console.log(namesList);  
+    // for (const key in namesList) {
+
+    //     var menuList = d3.select("#selDataset").append(`<option value=${key}</option>`);
+        
+    // }
 
     // Create function to retrieve data and store in list
-    function getNameData(name) {
+    function getNameData(nameData) {
 
-        currentOTUsIds = [];
+        currentOTUsIdsList = [];
         currentSampleValues = [];
-        currentOTUsLabels = [];
+        currentOTUsLabel = [];
         currentOTUsMetadata = [];
         currentWFreq = [];
 
         for (var i = 0; i < namesList.length; i ++) {
-            if (namesList[i] === name) {
+            if (namesList[i] === nameData) {
                 currentOTUsIds.push(OTUsIds[i]);
                 currentSampleValues.push(sampleValues[i]);
                 currentOTUsLabels.push(OTUsLabels[i]);
-                currentOTUsMetadata.push(OTUsMetadata[i]);
+                currentOTUsMetadata.push(OTUsMetadata);
                 currentWFreq.push(wfreq[i]);
             }
         }    
@@ -82,9 +87,9 @@ d3.json("samples.json").then((data) => {
     // Default Data
     createPlots('940'); 
     
-    function createPlots(name) {
+    function createPlots(nameData) {
         
-        getNameData(name);
+        getNameData(nameData);
 
         // Slice data for Top Ten OTU's Bar Chart
         var slicedOTUsIds = currentOTUsIds[0].slice(0, 10);
@@ -172,7 +177,7 @@ d3.json("samples.json").then((data) => {
         }];
 
         var bubbleLayout = {
-            title: `All of ${name}'s OTU Samples`,
+            title: `All of ${nameData}'s OTU Samples`,
             xaxis: {title: "OTU ID"},
             yaxis: {title: "Sample Values"},
             height: 600,
@@ -222,46 +227,43 @@ d3.json("samples.json").then((data) => {
 
         for (const [key, value] of Object.entries(defaultMetadata)) {
 
-            var panelBody = d3.select("ul").append("div");
-            panelBody.text(`${key}: ${value}`);
+            var panelBody = d3.select("#sample-metadata").append("div");
+            panelBody.text(`${key}:${value}`);
         }
-
-        // var panelBody = d3.select("ul").append("li");
-        // $.each(defaultMetadata, function(key, value) {
-        //     $("#sample-metadata").append(`<li>${key}: ${value}</li>`);
-        // });
-
-        // var metaReady = [];
-        // defaultMetadata.forEach(function([key, value]){
-        //     metaReady.push(`${key}: ${value}`);
-        //     var sampleMeta = d3.select("ul").append("li");
-        //     sampleMeta.text(metaReady);            
-        //     // var panelBody = d3.select("ul").append("li");
-        //     // panelBody.text(Object.entries(metaReady));
-        //     });
-        // console.log(metaReady);
-        var sampleMeta = d3.select("ul").append("li");
-        sampleMeta.push(Object.entries(defaultMetadata));
-        // var panelBody = d3.select("ul").append("li");
-        // // // panelBody.text(Object.entries(metaReady));
-        // // // var panelBody = d3.select("ul").append("li");
-        // // // panelBody.text(Object.entries(defaultMetadata));
-
-        // defaultMetadata.forEach((item) => {
-        //     console.log(item);
-        //     Object.entries(item).forEach(([key, value]) => {
-        //         panelBody.text.append(`${key}: ${value}`);
-        //     });
-        // });
-
-              // function updatePlotly() {
-        //     var dropdownMenu = d3.select("selDataset");
-        //     var newData = dropMenu.property("value");
-
-        //     if (dataset === data.names)
-
-        // }
 
     };
     createPlots()
+
+    d3.selectAll("#selDataset").on("change", newData);
+    function newData(nameData){
+
+        var dropdownMenu = d3.select("#selDataset").property("value");
+
+        var data = [];
+        if (dropdownMenu === nameData)
+            updatePlotly(data);
+    }
+
+    // function updatePlotly(newData) {
+    //     Plotly.restyle("", "values", [newdata]);
+    }
+    // // var plotEl = querySelector("#selDataset");
+    // var nameSelector = document.querySelector("#selDataset");
+
+    // function assignOptions(textArray, selector) {
+    //     for (var i = 0; i < textArray.length; i++) {
+    //         var currentOption = document.createElement('option');
+    //         currentOption.text = textArray[i];
+    //         selector.appendChild(currentOption);
+    //     }
+    // }
+    // assignOptions(namesList, nameSelector);
+
+    // function updateName () {
+    //     createPlots(nameSelector.value);
+    // }
+
+    // nameSelector.addEventListener('change', updateName, false);
+
 });
+
