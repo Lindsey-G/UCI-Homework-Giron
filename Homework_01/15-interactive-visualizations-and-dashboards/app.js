@@ -1,5 +1,6 @@
 // run python -m http.server for local host 8000
-// List dataset info for quick reference
+
+// List dataset information for quick reference
 /**
  * @param {array} rows 
  * @param {integer} index
@@ -18,6 +19,7 @@
  * index 3 - otu_labels
  */
 
+// Set up unpack function for when retrieving data
 function unpack(rows, index) {
     return rows.map(function(row) {
         return row[index];
@@ -51,28 +53,25 @@ d3.json("samples.json").then((data) => {
     var currentOTUsMetadata = [];
     var currentWFreq = [];
 
-    // for loop to itterate through individualNames array
+    // for loop to itterate through individualNames array for dropdown menu
     for (var i = 0; i < individualNames.length; i++){
         if (namesList.indexOf(individualNames[i]) === -1 ) {
             namesList.push(individualNames[i]);
         }
     }
     // console.log(namesList);  
-    // for (const key in namesList) {
-
-    //     var menuList = d3.select("#selDataset").append(`<option value=${key}</option>`);
-        
-    // }
 
     // Create function to retrieve data and store in list
     function getNameData(nameData) {
-
+        // Create empty list to store selected data
         currentOTUsIdsList = [];
         currentSampleValues = [];
         currentOTUsLabel = [];
         currentOTUsMetadata = [];
         currentWFreq = [];
 
+        // for loop to itterate through namesList and match selected data, then 
+        // push each value to correct list.
         for (var i = 0; i < namesList.length; i ++) {
             if (namesList[i] === nameData) {
                 currentOTUsIds.push(OTUsIds[i]);
@@ -88,7 +87,7 @@ d3.json("samples.json").then((data) => {
     createPlots('940'); 
     
     function createPlots(nameData) {
-        
+        // Call getNameData to use the same parameter and use variables
         getNameData(nameData);
 
         // Slice data for Top Ten OTU's Bar Chart
@@ -119,6 +118,8 @@ d3.json("samples.json").then((data) => {
         // console.log(slicedOTUsLabels); 
         // console.log(cleanWFreq);      
 
+        // Create Bar Chart for Top Ten OTU Ids using 
+        // stringIds, slicedSampleValues, slicedOTUsLables
         var topTenBarChart = [{
             type: 'bar',
             x: slicedSampleValues,
@@ -135,6 +136,7 @@ d3.json("samples.json").then((data) => {
     
         }];
 
+        // Create layout for Bar Chart
         var barChartLayout = {
             title: "Top Ten OTU's",
             // yaxis: {title: "IDS"},
@@ -162,9 +164,11 @@ d3.json("samples.json").then((data) => {
             }
 
         };
-
+        // Display Bar Chart
         Plotly.newPlot("OTUs-top-ten", topTenBarChart, barChartLayout);
 
+        // Create Bubble Chart using currentOTUsIds, currentSampleValues,
+        // and current OTUsLabels
         var bubbleChart = [{
             x: currentOTUsIds[0],
             y: currentSampleValues[0],
@@ -176,6 +180,7 @@ d3.json("samples.json").then((data) => {
             }
         }];
 
+        // Create Layout for Bubble Chart
         var bubbleLayout = {
             title: `All of ${nameData}'s OTU Samples`,
             xaxis: {title: "OTU ID"},
@@ -188,9 +193,10 @@ d3.json("samples.json").then((data) => {
                 family: 'Arial'
             }
         };
-        
+        // Display Bubble Chart
         Plotly.newPlot("bubble", bubbleChart, bubbleLayout);
 
+        // Create Gauge Chart using cleanWFreq
         var gaugePlot = [{
             type: "indicator",
             mode: "gauge+number+delta",
@@ -210,7 +216,7 @@ d3.json("samples.json").then((data) => {
 
            
         }];
-
+        // Create Layput for Gauge Chart
         var gaugeLayout = {
             width: 500,
             height: 400,
@@ -218,35 +224,55 @@ d3.json("samples.json").then((data) => {
             paper_bgcolor: 'lavendar',
             font: {color: "purple", family: "Arial"} 
         };
-
+        // Display Gauge Chart
         Plotly.newPlot("gauge", gaugePlot, gaugeLayout);
 
         // Create Demographic chart
         var defaultMetadata = data.metadata[0];
         // console.log(defaultMetadata);
-
+        
+        // for loop through defaultMetadata entries and append key and values
+        // #sample-metadata (panel body)
         for (const [key, value] of Object.entries(defaultMetadata)) {
-
+            // Select panel body
             var panelBody = d3.select("#sample-metadata").append("div");
+            // .text to append key and value
             panelBody.text(`${key}:${value}`);
         }
 
+        for (const [key, value] of Object.entries(namesList)) {
+            var menuList = d3.select("#selDataset").append("option");
+            menuList.text(`${value}`);
+        }
+        //
+        d3.selectAll("#selDataset").on("change", newData);
+        // 
+        function newData(nameData){
+
+            var dropdownMenu = d3.select("#selDataset");
+            var dataset = dropdownMenu.property("value");
+            var data = [];
+            if (dataset === nameData)
+                data = nameData;
+         }
+        createPlots(data);
+
     };
-    createPlots()
+    createPlots();
 
-    d3.selectAll("#selDataset").on("change", newData);
-    function newData(nameData){
+    // d3.selectAll("#selDataset").on("change", newData);
+    // function newData(nameData){
 
-        var dropdownMenu = d3.select("#selDataset").property("value");
+    //     var dropdownMenu = d3.select("#selDataset").property("value");
 
-        var data = [];
-        if (dropdownMenu === nameData)
-            updatePlotly(data);
-    }
+    //     var data = [];
+    //     if (dropdownMenu === nameData)
+    //         updatePlotly(data);
+    // }
 
     // function updatePlotly(newData) {
-    //     Plotly.restyle("", "values", [newdata]);
-    }
+    // //     Plotly.restyle("", "values", [newdata]);
+    // }
     // // var plotEl = querySelector("#selDataset");
     // var nameSelector = document.querySelector("#selDataset");
 
