@@ -218,28 +218,30 @@ d3.json("samples.json").then((data) => {
 
         // Create Demographic chart
         var defaultMetadata = data.metadata[0];
-        console.log(defaultMetadata);
-        d3.select("sample-metadata").append(defaultMetadata);
+        // console.log(defaultMetadata);
+
+        for (const [key, value] of Object.entries(defaultMetadata)) {
+
+            var panelBody = d3.select("ul").append("div");
+            panelBody.text(`${key}: ${value}`);
+        }
 
         // var panelBody = d3.select("ul").append("li");
         // $.each(defaultMetadata, function(key, value) {
         //     $("#sample-metadata").append(`<li>${key}: ${value}</li>`);
         // });
 
-        // each(defaultMetadata, (key, value, defaultMetadata) => {
-        //     // var panelBody = d3.select("ul").append("li");
-        //     // panelBody.text(`${key}: ${value}`);
-        //     console.log(`${key}: ${value}`);
-        // });
         // var metaReady = [];
         // defaultMetadata.forEach(function([key, value]){
         //     metaReady.push(`${key}: ${value}`);
+        //     var sampleMeta = d3.select("ul").append("li");
+        //     sampleMeta.text(metaReady);            
         //     // var panelBody = d3.select("ul").append("li");
         //     // panelBody.text(Object.entries(metaReady));
-        // });
+        //     });
         // console.log(metaReady);
-
-        // // console.log(Object.entries(defaultMetadata));
+        var sampleMeta = d3.select("ul").append("li");
+        sampleMeta.push(Object.entries(defaultMetadata));
         // var panelBody = d3.select("ul").append("li");
         // // // panelBody.text(Object.entries(metaReady));
         // // // var panelBody = d3.select("ul").append("li");
