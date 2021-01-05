@@ -26,76 +26,69 @@ function unpack(rows, index) {
     });
   }
 
-d3.json("samples.json").then((data) => {
+// Create default charts
+createPlots('940');
 
-    /** Create variables for names, otu_ids, sample_values, otu_labels, 
-    metadata, and wfreq to use on plots*/
-    var individualNames = data.names;
-    var OTUsIds = unpack(data.samples, 'otu_ids');
-    var sampleValues = unpack(data.samples, 'sample_values');
-    var OTUsLabels = unpack(data.samples, 'otu_labels');
-    var OTUsMetadata = data.metadata;
-    var wfreq = unpack(data.metadata, 'wfreq');
-    
-    // Confirm data is displaying correctly
-    // console.log(individualNames);
-    // console.log(OTUsIds);
-    // console.log(sampleValues);
-    // console.log(OTUsLabels);
-    // console.log(OTUsMetadata);
-    // console.log(wfreq);
+// Create funtion to plot all the charts
+function createPlots(newSearchRequest) {
 
-    // Create empty list for current selected data
-    var namesList = [];
-    var currentOTUsIds = [];
-    var currentSampleValues = [];
-    var currentOTUsLabels = [];
-    var currentOTUsMetadata = [];
-    var currentWFreq = [];
+    // Read in json data 
+    d3.json("samples.json").then((data) => {
+        /** Create variables for names, otu_ids, sample_values, otu_labels, 
+        metadata, and wfreq to use on plots*/
+        var individualNames = data.names;
+        var OTUsIds = unpack(data.samples, 'otu_ids');
+        var sampleValues = unpack(data.samples, 'sample_values');
+        var OTUsLabels = unpack(data.samples, 'otu_labels');
+        var OTUsMetadata = data.metadata;
+        var wfreq = unpack(data.metadata, 'wfreq');
+        
+        // Create empty list for current selected data
+        var namesList = [];
+        var currentOTUsIds = [];
+        var currentSampleValues = [];
+        var currentOTUsLabels = [];
+        var currentOTUsMetadata = [];
+        var currentWFreq = [];
 
-    // for loop to itterate through individualNames array for dropdown menu
-    for (var i = 0; i < individualNames.length; i++){
-        if (namesList.indexOf(individualNames[i]) === -1 ) {
-            namesList.push(individualNames[i]);
-        }
-    }
-    // console.log(namesList);  
-    
-    // .append nameList to option 
-    for (const [key, value] of Object.entries(namesList)) {
-        var menuList = d3.select("#selDataset").append("option");
-        menuList.text(`${value}`);
-    }
-
-    // Create function to retrieve data and store in list
-    function getNameData(nameData) {
-        // Create empty list to store selected data
-        currentOTUsIdsList = [];
-        currentSampleValues = [];
-        currentOTUsLabel = [];
-        currentOTUsMetadata = [];
-        currentWFreq = [];
-
-        // for loop to itterate through namesList and match selected data, then 
-        // push each value to correct list.
-        for (var i = 0; i < namesList.length; i ++) {
-            if (namesList[i] === nameData) {
-                currentOTUsIds.push(OTUsIds[i]);
-                currentSampleValues.push(sampleValues[i]);
-                currentOTUsLabels.push(OTUsLabels[i]);
-                currentOTUsMetadata.push(OTUsMetadata);
-                currentWFreq.push(wfreq[i]);
+        // for loop to itterate through individualNames array for dropdown menu
+        for (var i = 0; i < individualNames.length; i++){
+            if (namesList.indexOf(individualNames[i]) === -1 ) {
+                namesList.push(individualNames[i]);
             }
-        }    
-    };
+        } 
+        
+        // .append nameList to option to appear on dropdown menu
+        for (const [key, value] of Object.entries(namesList)) {
+            var menuList = d3.select("#selDataset").append("option");
+            menuList.text(`${value}`).attr("value", value);
+        }
 
-    // Default Data
-    createPlots('940'); 
-    
-    function createPlots(nameData) {
+        // Create function to retrieve data and store in list
+        function getNameData(newSearchRequest) {
+            // Create empty list to store selected data
+            currentOTUsIdsList = [];
+            currentSampleValues = [];
+            currentOTUsLabel = [];
+            currentOTUsMetadata = [];
+            currentWFreq = [];
+
+            // for loop to itterate through namesList and match selected data, then 
+            // push each value to correct list.
+            for (var i = 0; i < namesList.length; i ++) {
+                if (namesList[i] === newSearchRequest) {
+                    currentOTUsIds.push(OTUsIds[i]);
+                    currentSampleValues.push(sampleValues[i]);
+                    currentOTUsLabels.push(OTUsLabels[i]);
+                    currentOTUsMetadata.push(OTUsMetadata[i]);
+                    currentWFreq.push(wfreq[i]);
+                }
+            }    
+        };
+
         // Call getNameData to use the same parameter and use variables
-        getNameData(nameData);
-
+        getNameData(newSearchRequest);
+        
         // Slice data for Top Ten OTU's Bar Chart
         var slicedOTUsIds = currentOTUsIds[0].slice(0, 10);
         var slicedSampleValues = currentSampleValues[0].slice(0, 10);
@@ -105,7 +98,7 @@ d3.json("samples.json").then((data) => {
         slicedOTUsIds.reverse();
         slicedSampleValues.reverse();
         slicedOTUsLabels.reverse();
-    
+
         /** Remove null values from wfreq array, only array with null all others */
         var cleanWFreq = currentWFreq.filter((item) => {
             return item != null;
@@ -117,12 +110,6 @@ d3.json("samples.json").then((data) => {
         slicedOTUsIds.forEach(item => {
             stringIds.push("OTU" + " " + item + "");
         });        
-
-        // Confirm data is displaying correctly
-        // console.log(stringIds);
-        // console.log(slicedSampleValues);
-        // console.log(slicedOTUsLabels); 
-        // console.log(cleanWFreq);      
 
         // Create Bar Chart for Top Ten OTU Ids using 
         // stringIds, slicedSampleValues, slicedOTUsLables
@@ -139,7 +126,7 @@ d3.json("samples.json").then((data) => {
                     width: 1
                 }
             },
-    
+
         }];
 
         // Create layout for Bar Chart
@@ -220,7 +207,7 @@ d3.json("samples.json").then((data) => {
                 { range: [8, 9], color: "rgba (34,118,66)"}]
             }
 
-           
+        
         }];
         // Create Layput for Gauge Chart
         var gaugeLayout = {
@@ -234,83 +221,29 @@ d3.json("samples.json").then((data) => {
         Plotly.newPlot("gauge", gaugePlot, gaugeLayout);
 
         // Create Demographic chart
-        var defaultMetadata = data.metadata[0];
-        // console.log(defaultMetadata);
-        
+        // clear menu
+        d3.select("#sample-metadata").html("");
+    
         // for loop through defaultMetadata entries and append key and values
         // #sample-metadata (panel body)
-        for (const [key, value] of Object.entries(defaultMetadata)) {
+        for (const [key, value] of Object.entries(currentOTUsMetadata[0])) {
             // Select panel body
             var panelBody = d3.select("#sample-metadata").append("div");
             // .text to append key and value
             panelBody.text(`${key}:${value}`);
         }
-        
-    };
-    createPlots();
 
-    d3.selectAll("#selDataset").on("change", optionChanged);
-
-    function optionChanged() {
-
-        var dropdownMenu = d3.selectAll("#selDataset");
-        var dataset = dropdownMenu.property("value");
-        var newResult = [];
-        newResult = dataset;
-        console.log(newResult);
-
-        getNameData(newResult);
-    
-        // Slice data for Top Ten OTU's Bar Chart
-        var slicedOTUsIds = currentOTUsIds[0].slice(0, 10);
-        var slicedSampleValues = currentSampleValues[0].slice(0, 10);
-        var slicedOTUsLabels = currentOTUsLabels[0].slice(0, 10);
-
-        // Reverse data from slice to get descending order
-        slicedOTUsIds.reverse();
-        slicedSampleValues.reverse();
-        slicedOTUsLabels.reverse();
-    
-        /** Remove null values from wfreq array, only array with null all others */
-        var cleanWFreq = currentWFreq.filter((item) => {
-            return item != null;
-        }) 
-
-        // Turn Id numbers into string and added "OTU" so that when plotting 
-        // bar chart it displays as a string value instead of a range of integer vaules
-        var stringIds = [];
-        slicedOTUsIds.forEach(item => {
-            stringIds.push("OTU" + " " + item + "");
-        });        
-
-        // Update Bar Chart
-        Plotly.restyle("OTUs-top-ten", "x", [slicedSampleValues]);
-        Plotly.restyle("OTUs-top-ten", "y", [slicedOTUsIds]);
-        Plotly.restyle("OTUs-top-ten", "text", [slicedOTUsLabels]);
-
-        // Update Bubble Chart
-        Plotly.restyle("bubble", "x", [currentOTUsIds[0]]);
-        Plotly.restyle("bubble", "y", [currentSampleValues[0]]);
-        Plotly.restyle("bubble", "text", [currentOTUsLabels[0]]);
-        Plotly.restyle("bubble", "color", [currentOTUsIds[0]]);
-        Plotly.restyle("bubble", "size", [currentSampleValues[0]]);
-
-        // Update Gauge Chart
-        Plotly.restyle("gauge", "value", [cleanWFreq]);
-
-        // Update Demographic Table
-            
-        var defaultMetadata = data.metadata[0];
-        // console.log(defaultMetadata);
-                
-        // for loop through defaultMetadata entries and append key and values
-        // #sample-metadata (panel body)
-        for (const [key, value] of Object.entries(defaultMetadata)) {
-            // Select panel body
-            var panelBody = d3.select("#sample-metadata").append("div");
-            // .text to append key and value
-            panelBody.text(`${key}:${value}`);
-        };
-    };
-    optionChanged();
 });
+};
+
+// Even Listener calling on optionChanged()
+d3.selectAll("#selDataset").on("change", optionChanged);
+
+// Create optionchanged() to get value from menu and update all the charts by calling createPlots()
+function optionChanged(){
+
+    var dropdownMenu = d3.selectAll("#selDataset");
+    var dataset = dropdownMenu.property("value");
+    
+    createPlots(dataset);
+};
