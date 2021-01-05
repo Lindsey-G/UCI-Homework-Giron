@@ -60,6 +60,12 @@ d3.json("samples.json").then((data) => {
         }
     }
     // console.log(namesList);  
+    
+    // .append nameList to option 
+    for (const [key, value] of Object.entries(namesList)) {
+        var menuList = d3.select("#selDataset").append("option");
+        menuList.text(`${value}`);
+    }
 
     // Create function to retrieve data and store in list
     function getNameData(nameData) {
@@ -182,7 +188,7 @@ d3.json("samples.json").then((data) => {
 
         // Create Layout for Bubble Chart
         var bubbleLayout = {
-            title: `All of ${nameData}'s OTU Samples`,
+            title: `All OTU Samples`,
             xaxis: {title: "OTU ID"},
             yaxis: {title: "Sample Values"},
             height: 600,
@@ -239,31 +245,72 @@ d3.json("samples.json").then((data) => {
             // .text to append key and value
             panelBody.text(`${key}:${value}`);
         }
-
-        for (const [key, value] of Object.entries(namesList)) {
-            var menuList = d3.select("#selDataset").append("option");
-            menuList.text(`${value}`);
-        }
         
-        d3.selectAll("#selDataset").on("change", updateData);
-        // 
-        function updateData(){
-
-            var dropdownMenu = d3.select("#selDataset");
-            var dataset = dropdownMenu.property("value");
-
-            var newDataSelected = [];
-            
-            if (dataset === namesList) {
-                newDataSelected.push(namesList);
-            }
-            
-            // createPlots(newDataSelected);
-         }
-        console.log(newDataSelected);
-
     };
     createPlots();
 
-});
+    d3.selectAll("#selDataset").on("change", optionChanged);
 
+    function optionChanged() {
+
+        var dropdownMenu = d3.selectAll("#selDataset");
+        var dataset = dropdownMenu.property("value");
+        var newResult = [];
+        newResult = dataset;
+        console.log(newResult);
+
+        getNameData(newResult);
+    
+        // Slice data for Top Ten OTU's Bar Chart
+        var slicedOTUsIds = currentOTUsIds[0].slice(0, 10);
+        var slicedSampleValues = currentSampleValues[0].slice(0, 10);
+        var slicedOTUsLabels = currentOTUsLabels[0].slice(0, 10);
+
+        // Reverse data from slice to get descending order
+        slicedOTUsIds.reverse();
+        slicedSampleValues.reverse();
+        slicedOTUsLabels.reverse();
+    
+        /** Remove null values from wfreq array, only array with null all others */
+        var cleanWFreq = currentWFreq.filter((item) => {
+            return item != null;
+        }) 
+
+        // Turn Id numbers into string and added "OTU" so that when plotting 
+        // bar chart it displays as a string value instead of a range of integer vaules
+        var stringIds = [];
+        slicedOTUsIds.forEach(item => {
+            stringIds.push("OTU" + " " + item + "");
+        });        
+
+        // Update Bar Chart
+        Plotly.restyle("OTUs-top-ten", "x", [slicedSampleValues]);
+        Plotly.restyle("OTUs-top-ten", "y", [slicedOTUsIds]);
+        Plotly.restyle("OTUs-top-ten", "text", [slicedOTUsLabels]);
+
+        // Update Bubble Chart
+        Plotly.restyle("bubble", "x", [currentOTUsIds[0]]);
+        Plotly.restyle("bubble", "y", [currentSampleValues[0]]);
+        Plotly.restyle("bubble", "text", [currentOTUsLabels[0]]);
+        Plotly.restyle("bubble", "color", [currentOTUsIds[0]]);
+        Plotly.restyle("bubble", "size", [currentSampleValues[0]]);
+
+        // Update Gauge Chart
+        Plotly.restyle("gauge", "value", [cleanWFreq]);
+
+        // Update Demographic Table
+            
+        var defaultMetadata = data.metadata[0];
+        // console.log(defaultMetadata);
+                
+        // for loop through defaultMetadata entries and append key and values
+        // #sample-metadata (panel body)
+        for (const [key, value] of Object.entries(defaultMetadata)) {
+            // Select panel body
+            var panelBody = d3.select("#sample-metadata").append("div");
+            // .text to append key and value
+            panelBody.text(`${key}:${value}`);
+        };
+    };
+    optionChanged();
+});
