@@ -145,11 +145,50 @@ d3.csv("/assets/data/data.csv").then(function(newsData, err) {
         .text("Poverty");
     
     chartGroup.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 -margin.left)
+        .attr("x", 0 -(height / 2))
+        .attr("dy", "1em")
+        .classed("axis-text", true)
+        .text("Poverty vs Obesity");
     
-    
+    var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
 
+    labelsGroup.selectAll("text")
+        .on("click", function (){
+        var value = d3.select(this).attr("value");
+        if (value !== chosenXAxis) {
+            chosenXAxis = value;
+        
+            xLinearScale = xScale(newsData, chosenXAxis);
+            
+            xAxis = renderAxes(xLinearScale, xAxis);
 
-}); 
+            circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
+
+            circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+
+            if (chosenXAxis === "poverty") {
+                povertyLabel
+                .classed("active", true)
+                .classed("inactive", false);
+
+                obesityLabel
+                .clased("active", false)
+                .classed("inactive", true);
+            }
+            else {
+                povertyLabel
+                .classed("active", false)
+                .classed("inactive", true)
+
+                obesityLabel
+                .clased("inactive", true)
+                .clased("active", false)
+            }
+        }
+    });
+}).catch(err => console.log(err)); 
 
 
 
