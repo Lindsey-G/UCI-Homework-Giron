@@ -28,6 +28,7 @@ var chartGroup = svg.append("g")
 
 // Create variable for chosenXAxis
 var chosenXAxis = "obesity";
+var chosenYAxis = "poverty";
 
 // Create function to calculate xLinearScale from chosenXAxis
 function xScale(newsData, chosenXAxis) {
@@ -38,7 +39,7 @@ function xScale(newsData, chosenXAxis) {
         .range([0, width]);
     return xLinearScale;
 }
-var chosenYAxis = "poverty"
+
 function yScale(newsData, chosenYAxis) {
     var yLinearScale = d3.scaleLinear()
         .domian([0, d3.max(newsData, d => d[chosenYAxis])])
@@ -129,11 +130,23 @@ d3.csv("/assets/data/data.csv").then(function(newsData, err) {
     var labelsGroup = chartGroup.append("g")
         .attr("transform", `translate(${width / 2}${height + 20 })`);
     
-    var obesityData = labelsGroup.append("text")
+    var obesityLabel = labelsGroup.append("text")
         .attr("x", 0)
         .attr("y", 20)
         .attr("value", "obesity")
-        .classed("")
+        .classed("active", true)
+        .text("Obesity");
+    
+    var povertyLabel = labelsGroup.append("text")
+        .attr("x", 0)
+        .attr("y", 40)
+        .attr("value", "poverty")
+        .classed("inactive", true)
+        .text("Poverty");
+    
+    chartGroup.append("text")
+    
+    
 
 
 }); 
