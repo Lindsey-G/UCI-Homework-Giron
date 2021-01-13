@@ -12,11 +12,12 @@ var margin = {
 };
 
 // Set width and height for scatter plot with above dimensions 
-var width = svgWidth - margin.right - margin.left;
+var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create SVG wrapper
-var svg = d3.select("#scatter")
+var svg = d3
+    .select("#scatter")
     .append("svg")
     .attr("width", svgWidth)
     .attr("height", svgHeight);
@@ -24,7 +25,7 @@ var svg = d3.select("#scatter")
 // append a SVG Group to SVG wrapper by .append("g")
 var chartGroup = svg.append("g")
     // using transform to translate the left and top margin of the scatter plot
-    .attr("transform", `translate ${margin.left}, ${margin.top}`);
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Create variable for chosenXAxis
 var chosenXAxis = "obesity";
@@ -33,8 +34,8 @@ var chosenYAxis = "poverty";
 // Create function to calculate xLinearScale from chosenXAxis
 function xScale(newsData, chosenXAxis) {
     var xLinearScale = d3.scaleLinear()
-        .domian([d3.min(newsData, d => d[chosenXAxis]) * 0.8,
-        d3.max(newsData, d => d[chosenXAxis]) * 1.2 
+        .domain([d3.min(newsData, d => d[chosenXAxis]) * 0.8,
+            d3.max(newsData, d => d[chosenXAxis]) * 1.2 
         ])
         .range([0, width]);
     return xLinearScale;
@@ -42,7 +43,8 @@ function xScale(newsData, chosenXAxis) {
 
 function yScale(newsData, chosenYAxis) {
     var yLinearScale = d3.scaleLinear()
-        .domian([0, d3.max(newsData, d => d[chosenYAxis])])
+        .domain([0, d3.max(newsData, d => d[chosenYAxis])])
+        // for y axis to appear with the zero at the botto height is the first parameter
         .range([height, 0]);
     return yLinearScale;
 }
@@ -60,7 +62,7 @@ function renderAxes(newXScale, xAxis) {
 function renderCircles(circlesGroup, newXScale, chosenXAxis) {
     circlesGroup.transition()
         .duration(1000)
-        .attr("c", d => newXScale(d[chosenXAxis]));
+        .attr("cx", d => newXScale(d[chosenXAxis]));
     
     return circlesGroup;
 }
@@ -68,10 +70,10 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
 function updateToolTip(chosenXAxis, circlesGroup) {
     var label;
     if (chosenXAxis === "obesity") {
-        label = "obesity";
+        label = "Obesity";
     }
     else {
-        label = "poverty";
+        label = "Poverty";
     }
 
     var toolTip = d3.tip()
@@ -105,7 +107,7 @@ d3.csv("/assets/data/data.csv").then(function(newsData, err) {
     })
     var xLinearScale = xScale(newsData, chosenXAxis);
     var yLinearScale = yScale(newsData, chosenYAxis);
-
+    console.log(xLinearScale);
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
@@ -118,7 +120,7 @@ d3.csv("/assets/data/data.csv").then(function(newsData, err) {
         .call(leftAxis);
 
     var circlesGroup = chartGroup.selectAll("cirlce")
-        .data(newsData)
+        .data([newsData])
         .enter()
         .append("cirlce")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
@@ -128,7 +130,7 @@ d3.csv("/assets/data/data.csv").then(function(newsData, err) {
         .attr("opacity", ".5");
 
     var labelsGroup = chartGroup.append("g")
-        .attr("transform", `translate(${width / 2}${height + 20 })`);
+        .attr("transform", `translate(${width / 2}, ${height + 20 })`);
     
     var obesityLabel = labelsGroup.append("text")
         .attr("x", 0)
@@ -146,8 +148,8 @@ d3.csv("/assets/data/data.csv").then(function(newsData, err) {
     
     chartGroup.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", 0 -margin.left)
-        .attr("x", 0 -(height / 2))
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .classed("axis-text", true)
         .text("Poverty vs Obesity");
@@ -161,6 +163,7 @@ d3.csv("/assets/data/data.csv").then(function(newsData, err) {
             chosenXAxis = value;
         
             xLinearScale = xScale(newsData, chosenXAxis);
+  
             
             xAxis = renderAxes(xLinearScale, xAxis);
 
@@ -174,7 +177,7 @@ d3.csv("/assets/data/data.csv").then(function(newsData, err) {
                 .classed("inactive", false);
 
                 obesityLabel
-                .clased("active", false)
+                .classed("active", false)
                 .classed("inactive", true);
             }
             else {
@@ -183,8 +186,8 @@ d3.csv("/assets/data/data.csv").then(function(newsData, err) {
                 .classed("inactive", true)
 
                 obesityLabel
-                .clased("inactive", true)
-                .clased("active", false)
+                .classed("active", true)
+                .classed("inactive", false)
             }
         }
     });
