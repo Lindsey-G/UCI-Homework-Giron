@@ -9,7 +9,7 @@ d3.json(queryUrl, function(data) {
 
 // Create function pullData
 function pullData(earthquakeData){
-
+    
     function onEachFeature(feature, layer) {
         layer.bindPopup("<h3>" + feature.properties.place + "<h3><p>" +
         feature.properties.mag + "magnitudes</p><p>" + new Date(feature.properties.time) + "</p>");
@@ -17,7 +17,7 @@ function pullData(earthquakeData){
         // console.log(feature.properties.mag);
         // console.log(feature.properties.time);
 
-        var circle = L.circle([])
+    
     }
 
     // Create a GeoJSON layer containing the features array on the earthquakeData object
