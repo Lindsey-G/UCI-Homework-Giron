@@ -11,11 +11,13 @@ d3.json(queryUrl, function(data) {
 function pullData(earthquakeData){
 
     function onEachFeature(feature, layer) {
-        layer.bindPopup("<h3>" + feature.properties.place + "<h3><br><p>" +
-        feature.properties.mag + "</p><br><p>" + new Date(feature.properties.time) + "</p>");
+        layer.bindPopup("<h3>" + feature.properties.place + "<h3><p>" +
+        feature.properties.mag + "magnitudes</p><p>" + new Date(feature.properties.time) + "</p>");
         // console.log(feature.properties.place);
         // console.log(feature.properties.mag);
         // console.log(feature.properties.time);
+
+        var circle = L.circle([])
     }
 
     // Create a GeoJSON layer containing the features array on the earthquakeData object
@@ -23,9 +25,10 @@ function pullData(earthquakeData){
     var earthquakes = L.geoJSON(earthquakeData, {
         onEachFeature: onEachFeature
     });
-
+    console.log(earthquakes);
     // Sending our earthquakes layer to the createMap function
     createMap(earthquakes);
+    // console.log(earthquakes);
 }
 // Select which data to pull from endpoint
 
@@ -64,8 +67,8 @@ function createMap(earthquakes) {
 
     // Create our map, giving it the streetmap and earthquakes layers to display on load
     var myMap = L.map("map", {
-        center: [34.1902, 118.1313],
-        zoom: 5,
+        center: [34.1902, -118.1313],
+        zoom: 4,
         layers: [streetmap, earthquakes]
     });
     // Create a layer control
