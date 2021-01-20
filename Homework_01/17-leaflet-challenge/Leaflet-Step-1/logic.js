@@ -3,6 +3,7 @@ var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_we
 
 // Pull data from USGS endpoint and call .features 
 d3.json(queryUrl, function(data) {
+    // Call createFeatures with data.features
     createFeatures(data.features);
     // console.log(data.features);
 }); 
@@ -10,17 +11,52 @@ d3.json(queryUrl, function(data) {
 // Create function pullData
 function createFeatures(earthquakeDataFeatures){
 
+    // function highlightFeature(e) {
+
+    //     var layer = e.target;
+
+    //     layer.setStyle({
+    //         weight: 5,
+    //         color: '#666',
+    //         dashArray: '',
+    //         fillOpacity: 0.7
+
+    //     });
+
+    //     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+    //         layer.bringToFront();
+    //     }
+    // }
+
+    // function resetHighlight(e) {
+    //     geojson.resetStyle(e.target);
+    // }
+
+    // function zoomToFeature(e) {
+    //     map.fitBounds(e.target.getBounds());
+    // }
+
     function onEachFeature(feature, circle) {
-        // if statement to filter out any null values
+
         if (feature.properties.place && feature.properties.time && feature.properties.mag && feature.geometry.coordinates[1] && feature.geometry.coordinates[0] && feature.geometry.coordinates[2] !== null) {            
-            // Set up pop up with place, mag and time data
-            circle.bindPopup("<h3>" + feature.properties.place + "<h3><p>" +
-            feature.properties.mag + " magnitudes</p><p>" + feature.geometry.coordinates[2] +
-            " depth</p><p>" + new Date(feature.properties.time) + "</p>");   
-            // console.log(+feature.geometry.coordinates[2]);
+
+        // layer.on({
+        //     mouseover: highlightFeature,
+        //     mouseout: resetHighlight,
+        //     click: zoomToFeature
+        // });
+        
+        // if statement to filter out any null values
+        // Set up pop up with place, mag and time data
+        circle.bindPopup("<h3>" + feature.properties.place + "<h3><p>" +
+        feature.properties.mag + " magnitudes</p><p>" + feature.geometry.coordinates[2] +
+        " depth</p><p>" + new Date(feature.properties.time) + "</p>");   
+        // console.log(+feature.geometry.coordinates[2]);
         }
-    }
-    // Create function for radius to return mag * 2000 for better visualization
+
+        
+
+    }    // Create function for radius to return mag * 2000 for better visualization
     function radiusMag(mag) { 
         return mag * 25000;
     }
@@ -63,6 +99,22 @@ function createFeatures(earthquakeDataFeatures){
     });
     // console.log(earthquakes);
     // Sending our earthquakes layer to the createMap function
+    // var info = L.control();
+
+    // info.onAdd = function(map) {
+    //     this._div = L.DomUtil.create('div', 'info'); 
+    //     this.update();
+    //     return this._div;
+    // };
+
+    // info.update = function (feature) {
+    //     this._div.innerHTML = '<h4>Latest Earthquakes - Past 7 Days</h4>' + (feature ?
+    //         '<b>' + feature.properties.place + '</b><br /><b>' + feature.properties.mag + ' Magnitude</b>' + 
+    //         '<p>' + feature.geometry.coordinates.depth + '</p><p>' + new Date(feature.properties.time) + '</p>': 'Hover over circle');
+    // };
+
+    // info.addTo(map);
+
     createMap(earthquakes);
     // console.log(earthquakes);
 // Select which data to pull from endpoint
@@ -94,7 +146,7 @@ function createMap(earthquakes) {
     };
 
     // Create our map, giving it the streetmap and earthquakes layers to display on load
-    var myMap = L.map("map", {
+    var map = L.map("map", {
         center: [34.1902, -118.1313],
         zoom: 3,
         layers: [streetmap, earthquakes]
@@ -105,7 +157,7 @@ function createMap(earthquakes) {
     // Add the layer control to the map
     L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
-    }).addTo(myMap);
+    }).addTo(map);
 
     // // Create legend
     // function for legend colors
@@ -121,16 +173,18 @@ function createMap(earthquakes) {
 
     }
 
-    function highlightFeature(e) {
-        var layer = e.target;
-
-        layer.setStyle({
-            weight: 5,
-            color: '#666',
-            
-        })
+    function style(feature) {
+        return {
+            fillColor: getColor(feature.properties.depth),
+            weight: 2,
+            opacity: 1,
+            color: getColor(feature.properties.depth),
+            fillOpacity: 0.7
+        };
     }
+    L.geoJSON(earthquakeDataFeatures, {style: style}).addTo(map)
 
+    
     var legend = L.control({position: "bottomright"});
 
     legend.onAdd = function(map) {
@@ -146,6 +200,6 @@ function createMap(earthquakes) {
         }
         return div;
     };
-    legend.addTo(myMap);
+    legend.addTo(map);
 }
 }
