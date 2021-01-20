@@ -20,30 +20,30 @@ function createFeatures(earthquakeDataFeatures){
             // console.log(+feature.geometry.coordinates[2]);
         }
     }
-    // Create function for radius to return mag * 2000
+    // Create function for radius to return mag * 2000 for better visualization
     function radiusMag(mag) { 
-        return mag;
+        return mag * 25000;
     }
 
     // Create function for color scale base on mag value
     function circleColor(depth) {
         if (depth  < -10) {
-            return "#fffc00"
+            return "#fffb2"
         }
         else if (depth < 10) {
-            return "#cff000"
+            return "#fed976"
         }
         else if (depth < 30) {
-            return "#b5d300"
+            return "#feb24c"
         }
         else if (depth < 50) {
-            return "#bc7900"
+            return "#fd8d3c"
         }
         else if (depth < 70) {
-            return "#c55400"
+            return "#f03b20"
         }
         else if (depth < 90) {
-            return "#cf0000"
+            return "#bd0026"
         }
     }
     // Create a GeoJSON layer containing the features array on the earthquakeData object
@@ -54,7 +54,8 @@ function createFeatures(earthquakeDataFeatures){
             return L.circle(latlng, {
                 radius: radiusMag(earthquakeDataFeatures.properties.mag),
                 color: circleColor(earthquakeDataFeatures.geometry.coordinates[2]),
-                fillOpacity: 0.9
+                fillColor: circleColor(earthquakeDataFeatures.geometry.coordinates[2]),
+                fillOpacity: 0.7
             
             });
         },
@@ -95,7 +96,7 @@ function createMap(earthquakes) {
     // Create our map, giving it the streetmap and earthquakes layers to display on load
     var myMap = L.map("map", {
         center: [34.1902, -118.1313],
-        zoom: 4,
+        zoom: 3,
         layers: [streetmap, earthquakes]
     });
 
@@ -108,29 +109,40 @@ function createMap(earthquakes) {
 
     // // Create legend
     // function for legend colors
-    function legendColors(c) {
+    function getColor(c) {
 
-        return  c > 90 ? "#cf0000":
-                c > 70 ? "#c55400":
-                c > 50 ? "#bc79000":
-                c > 30 ? "#b5d300":
-                c > 10 ? "#cff000":
-                         "#fffc00";
+        return  c > 90 ? "#bd0026":
+                c > 70 ? "#f03b20":
+                c > 50 ? "#fd8d3c":
+                c > 30 ? "#feb24c":
+                c > 10 ? "#fed976":
+                         "#ffffb2";
 
 
     }
 
+    function highlightFeature(e) {
+        var layer = e.target;
+
+        layer.setStyle({
+            weight: 5,
+            color: '#666',
+            
+        })
+    }
+
     var legend = L.control({position: "bottomright"});
 
-    legend.onAdd = function(legendMag) {
+    legend.onAdd = function(map) {
         
         var div = L.DomUtil.create("div", "info legend");
-        var labels = ["-10-10", "10-30", "30-50", "50-70", "70-90", "90+"];
+        var mags = [-10, 10, 30, 50, 70, 90];
+        var labels = [];
 
-        for (var i = 0; i < labels.length; i++) {
+        for (var i = 0; i < mags.length; i++) {
             div.innerHTML +=
-            '<i style="background:' + legendColors(labels[i] + 1) + '"></i>' +
-            labels[i] + (labels[i + 1] ? '&ndash;' + labels[i + 1] + '<br>' : '+');
+            '<i style="background:' + getColor(mags[i] + 1) + '"></i>' +
+            mags[i] + (mags[i + 1] ? '&ndash;' + mags[i + 1] + '<br>' : '+');
         }
         return div;
     };
